@@ -29,15 +29,15 @@ PROJECTNAME=test
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC= tp1.cpp
+PRJSRC= uart.cpp switchingLedColours.cpp #ajouter tous les .cpp
 
 # Inclusions additionnels (ex: -I/path/to/mydir) path pour makefile de la lib
-INC=
+INC= -I/lab7/lib #not sure
 
 # Libraires a lier (ex: -lmylib)
 #dans makefile de la exec
-LIBS= -lRobot
 #pour trouver libRobot.a
+LIBS= -lRobot
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
 OPTLEVEL=s
@@ -96,10 +96,6 @@ LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 TRG=$(PROJECTNAME).elf
 HEXROMTRG=$(PROJECTNAME).hex
 HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex
-
-#dans makefile de la lib
-LIBNAME=libRobot
-LIBTRG=$(LIBNAME).a
 
 
 ####### Definition de tout les fichiers objets #######
