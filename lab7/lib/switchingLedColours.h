@@ -26,6 +26,7 @@ switchingLedColours(uint8_t* ddrx,
         {
             ddrx_ = DDRB;
             *ddrx_ |= (1 << setPos) | (1 << clearPos); //portB en sortie
+            portx_ = PINB;
         }
         void switchLedGreen();
         void switchLedRed();
