@@ -12,7 +12,7 @@ Timer::timer() {
 //methode qui demarre la minuterie et autorise les interruptions
 //prend la duree en argument
 /*************************/
-void Timer::startTimer(uint6_t duration) {
+void Timer::startTimer(uint8_t duration) {
     timerIsRunning_ = true;
     // mode CTC du timer 1 avec horloge divisée par 1024
     // interruption après la durée spécifiée

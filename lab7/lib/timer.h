@@ -5,7 +5,7 @@
 class Timer {
     public:
         timer();
-        void startTimer(uint6_t duration);
+        void startTimer(uint8_t duration);
         void stopTimer();
         bool IsTimerRunning();
         void setTimerRunning(bool value);
