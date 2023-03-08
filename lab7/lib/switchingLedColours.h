@@ -7,7 +7,7 @@
     class switchingLedColours
     {
     public:
-    switchingLedColours(volatile uint8_t* ddrx,
+    switchingLedColours(uint8_t* ddrx,
                         volatile uint8_t* portx,
                         uint8_t setPos,
                         uint8_t clearPos) : 
