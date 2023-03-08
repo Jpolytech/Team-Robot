@@ -4,7 +4,7 @@
 //methode qui sensibilise les interruptions lors des changements d'état du bouton (rising & falling edges)
 //aucun argument et ne renvoie rien
 /*************************/
-void initialisation (void) {
+void pressedButtonScrutation::initialisation (void) {
     cli (); 
     EIMSK |= (1 << INT0);
     EICRA |= (1 << ISC00);

@@ -17,17 +17,17 @@ class pressedButtonScrutation {
         uint8_t clearPos_;
 }
 
-pressedButtonScrutation::pressedButtonScrutation( //constructeur paramétré
-    volatile uint8_t* ddrx,
-    volatile uint8_t* pinx,
-    uint8_t setPos,
-    uint8_t clearPos): 
-    ddrx_(ddrx), 
-    portx_(pinx),
-    setPos_(setPos), 
-    {
-    ddrx_ = DDRD;
-    *ddrx_ &= ~(1 << setPos) | (1 << clearPos); //pd2 en entree
-    portx_ = PIND;
-    buttonIsPushed_ = false;
-    }
+pressedButtonScrutation::  
+pressedButtonScrutation(volatile uint8_t* ddrx,
+                        volatile uint8_t* pinx,
+                        uint8_t setPos,
+                        uint8_t clearPos): 
+                        ddrx_(ddrx), 
+                        portx_(pinx),
+                        setPos_(setPos), 
+                        {
+                        ddrx_ = DDRD;
+                        *ddrx_ &= ~(1 << setPos) | (1 << clearPos); //pd2 en entree
+                        portx_ = PIND;
+                        buttonIsPushed_ = false;
+                        }

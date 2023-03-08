@@ -5,21 +5,7 @@
 
 class switchingLedColours {
     public:
-        switchingLedColours(uint8_t* ddrx,
-                            volatile uint8_t* portx,
-                            uint8_t setPos,
-                            uint8_t clearPos) : 
-                            ddrx_(ddrx), 
-                            portx_(portx), 
-                            setPos_(setPos), 
-                            clearPos_(clearPos)
-        {
-            *ddrx_ |= (1 << setPos) | (1 << clearPos); //port en sortie
-        }
-        void switchLedGreen();
-        void switchLedRed();
-        void switchLedAmber();
-        void turnedOffLed();
+    switchingLedColours();
 
     private:        
         uint8_t portx_;
@@ -27,3 +13,20 @@ class switchingLedColours {
         uint8_t clearPos_;
         uint8_t* ddrx_;
 };
+
+switchingLedColours::
+switchingLedColours(uint8_t* ddrx,
+                    volatile uint8_t* portx,
+                    uint8_t setPos,
+                    uint8_t clearPos) : 
+                    ddrx_(ddrx), 
+                    portx_(portx), 
+                    setPos_(setPos), 
+                    clearPos_(clearPos)
+        {
+            *ddrx_ |= (1 << setPos) | (1 << clearPos); //port en sortie
+        }
+        void switchLedGreen();
+        void switchLedRed();
+        void switchLedAmber();
+        void turnedOffLed();
