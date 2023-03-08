@@ -1,15 +1,4 @@
-#include <Bouton.h>
-
-//*******************************
-//Constructeur par defaut:
-//Bouton sur le PORTD et PD2
-//*******************************
-Button::Button() { //pas sûr
-    buttonIsPushed_ = false;
-    DDRD &= ~(1 << PORTD2);
-    portx_ = PIND;
-    ddrx_ = DDRD;
-}
+#include <pressedButtonScrutation.h>
 
 /*************************/
 //methode qui sensibilise les interruptions lors des changements d'état du bouton (rising & falling edges)
@@ -28,6 +17,6 @@ void initialisation (void) {
 //methode qui renvoie le dernier etat connu du bouton
 //renvoie un booleen
 /*************************/
-bool Button::getButtonState() {
+bool pressedButtonScrutation::getButtonState() {
     return buttonIsPushed_;
 }
