@@ -28,10 +28,8 @@
 class can
 {
 public:
-
    can();
    ~can();
-
    // retourne la valeur numerique correspondant a la valeur
    // analogique sur le port A.  pos doit etre entre 0 et 7
    // inclusivement.  Seulement les 10 bits de poids faible
@@ -40,7 +38,6 @@ public:
 
 private:
    // Donnees membres - aucun
-
 };
 
 #endif /* CAN_H */
