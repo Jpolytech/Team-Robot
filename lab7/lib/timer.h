@@ -4,12 +4,12 @@
 
 class Timer {
     public:
-        Minuterie();
+        timer();
         void startTimer(uint6_t duration);
         void stopTimer();
         bool IsTimerRunning();
         void setTimerRunning(bool value);
 
     private:
-            bool timerIsRunning_;       
+        bool timerIsRunning_;       
 }

@@ -4,7 +4,7 @@
 //constructeur par defaut
 //aucun argument et ne renvoie rien
 /*************************/
-Timer::Timer() {
+Timer::timer() {
     timerIsRunning_ = false;
 }
 

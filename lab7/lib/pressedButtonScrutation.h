@@ -13,17 +13,17 @@ class {
                 ddrx_(ddrx), 
                 portx_(pinx),
                 setPos_(setPos), 
-    {
-        *ddrx_ &= ~(1 << setPos) | (1 << clearPos); //pd2 en entree
-        buttonIsPushed_ = false;
-    }
-    void initialisation();
-    bool getButtonState();
+        {
+            *ddrx_ &= ~(1 << setPos) | (1 << clearPos); //pd2 en entree
+            buttonIsPushed_ = false;
+        }
+        void initialisation();
+        bool getButtonState();
 
     private:
-    bool buttonIsPushed_;
-    uint8_t* ddrx_;
-    uint8_t portx_;
-    uint8_t setPos_;
-    uint8_t clearPos_;
+        bool buttonIsPushed_;
+        uint8_t* ddrx_;
+        uint8_t portx_;
+        uint8_t setPos_;
+        uint8_t clearPos_;
 }

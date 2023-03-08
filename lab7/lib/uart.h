@@ -5,8 +5,8 @@
 
 class GestionUSART {
     public:
-    GestionUSART() = default;
-    void initialisationUART();
-    void transmissionUSART ( uint8_t donnee );
-    void transmissionStringUSART( uint8_t taille );
+        GestionUSART() = default;
+        void initialisationUART();
+        void transmissionUSART (uint8_t donnee);
+        void transmissionStringUSART(uint8_t taille);
 }
