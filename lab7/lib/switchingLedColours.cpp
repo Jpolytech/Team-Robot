@@ -4,6 +4,9 @@
 #include <avr/interrupt.h>
 #include <switchingLedColours.h>
 
+const uint8_t DELAY_AMBER_GREEN_ = 30;
+const uint8_t DELAY_AMBER_RED_ = 10;
+
 switchingLedColours::switchLedGreen(){
     *port_ |= (1 << setPos_);
     *port_ &= ~(1 << clearPos_);

@@ -24,8 +24,6 @@
     void switchLedAmber();
 
 private:        
-    const uint8_t DELAY_AMBER_GREEN_ = 30;
-    const uint8_t DELAY_AMBER_RED_ = 10;
     uint8_t portx_;
     uint8_t setPos_;
     uint8_t clearPos_;
