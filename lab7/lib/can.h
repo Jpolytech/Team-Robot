@@ -15,7 +15,6 @@
 
 #ifndef CAN_H
 #define CAN_H
-
 #include <avr/io.h> 
 
 /*

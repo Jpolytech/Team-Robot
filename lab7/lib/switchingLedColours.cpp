@@ -9,14 +9,14 @@ const uint8_t DELAY_AMBER_RED_ = 10;
 
 switchingLedColours::switchLedGreen()
 {
-    *port_ |= (1 << setPos_);
-    *port_ &= ~(1 << clearPos_);
+    *portx_ |= (1 << setPos_);
+    *portx_ &= ~(1 << clearPos_);
 }
 
 switchingLedColours::switchLedRed()
 {
-    *port_ &= ~(1 << clearPos_);
-    *port_ |= (1 << setPos_); 
+    *portx_ &= ~(1 << clearPos_);
+    *portx_ |= (1 << setPos_); 
 }
 
 switchingLedColours::switchLedAmber()
@@ -29,7 +29,7 @@ switchingLedColours::switchLedAmber()
 
 switchingLedColours::turnedOffLed()
 {
-    *port_ &= ~(1 << clearPos_);
-    *port_ &= ~(1 << clearPos_);
+    *portx_ &= ~(1 << clearPos_);
+    *portx_ &= ~(1 << clearPos_);
 }
 
