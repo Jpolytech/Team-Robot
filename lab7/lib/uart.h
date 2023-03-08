@@ -2,11 +2,10 @@
 #include <util/twi.h>
 
 // Classe pour la gestion de la memoire et la transmission de l'UART
-
-class GestionUSART {
+class ManagementUSART {
     public:
-        GestionUSART() = default;
-        void initialisationUART();
-        void transmissionUSART (uint8_t donnee);
-        void transmissionStringUSART(uint8_t taille);
+        ManagementUSART() = default;
+        void initialisationUSART();
+        void transmissionUSART (uint8_t data);
+        void transmissionStringUSART(uint8_t length);
 }
