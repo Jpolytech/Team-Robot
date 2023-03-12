@@ -32,12 +32,12 @@ PROJECTNAME=robot
 PRJSRC= main.cpp
 
 # Inclusions additionnels (ex: -I/path/to/mydir) path pour makefile de la lib
-INC= -I ../lib
+INC= -I ../../lib
 
 # Libraires a lier (ex: -lmylib)
 #dans makefile de la exec
 #pour trouver libRobot.a
-LIBS= -leredelivre -L ../lib
+LIBS= -leredelivre -L ../../lib
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)

@@ -23,13 +23,13 @@ MCU=atmega324pa
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=test
+PROJECTNAME= liberedelivre
 
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC= tp1.cpp
+PRJSRC= $(wildcard *.cpp)
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC=
@@ -62,15 +62,7 @@ AVRDUDE_PROGRAMMERID=usbasp
 
 #compilateur utilise
 CC=avr-gcc
-#pour copier le contenu d'un fichier objet vers un autre
-OBJCOPY=avr-objcopy
-#pour permettre le transfert vers le microcontroleur
-AVRDUDE=avrdude
-#pour supprimer les fichiers lorsque l'on appel make clean
-REMOVE=rm -f
-# HEXFORMAT -- format pour les fichiers produient .hex
-HEXFORMAT=ihex
-
+AR = avr-ar crs
 
 
 ####### Options de compilation #######
@@ -92,13 +84,7 @@ LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 ####### Cible (Target) #######
 
 #Nom des cibles par defaut
-TRG=$(PROJECTNAME).elf
-HEXROMTRG=$(PROJECTNAME).hex
-HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex
-
-#dans makefile de la lib
-LIBNAME=libRobot
-LIBTRG=$(LIBNAME).a
+TRG=$(PROJECTNAME).a
 
 ####### Definition de tout les fichiers objets #######
 
@@ -130,11 +116,11 @@ OBJDEPS=$(CFILES:.c=.o) \
 
 # Make all permet simplement de compiler le projet
 #
-all: $(TRG) $(HEXROMTRG)
+all: $(TRG)
 
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
-	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
+	$(AR) -o $(TRG) $(OBJDEPS) \
 	-lm $(LIBS)
 
 # Production des fichiers object
