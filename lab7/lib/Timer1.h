@@ -4,17 +4,17 @@
 
 enum class WaveformMode
 {
-    Normal,
+    NORMAL,
     CTC
 };
 
 enum class Prescaler
 {
-    NoPrescaling,
-    Prescale8,
-    Prescale64,
-    Prescale256,
-    Prescale1024
+    NO_PRESCALING,
+    PRESCALE_8,
+    PRESCALE_64,
+    PRESCALE_256,
+    PRESCALE_1024
 };
 
 class Timer1
@@ -29,6 +29,8 @@ public:
 private:
     void setWaveformMode(WaveformMode mode);
     void setPrescaler(Prescaler prescaler);
+    void clearWaveformMode();
+    void clearPrescaler();
 
     void enableInterrupt();
     void disableInterrupt();
@@ -36,6 +38,6 @@ private:
     Prescaler prescaler_;
     WaveformMode mode_;
     volatile bool timerIsRunning_ = false;
-}
+};
 
-// Nice to have: duration in milliseconds
+// ✨✨✨ Nice to have: duration in milliseconds ✨✨✨

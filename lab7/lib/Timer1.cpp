@@ -25,57 +25,69 @@ void Timer1::startTimer(uint16_t duration)
     sei();
 }
 
+void Timer1::clearWaveformMode()
+{
+    TCCR1A &= ~((1 << WGM10) | (1 << WGM11) | (1 << WGM12) | (1 << WGM13));
+}
+
 void Timer1::setWaveformMode(WaveformMode mode)
 {
+    mode_ = mode;
+    clearWaveformMode();
+
     switch (mode)
     {
-    case WaveformMode::Normal:
-        TCCR1A &= ~(1 << WGM10) | (1 << WGM11) | (1 << WGM12) | (1 << WGM13);
+    case WaveformMode::NORMAL:
         break;
 
     case WaveformMode::CTC:
         TCCR1A |= (1 << WGM12);
-        TCCR1A &= ~(1 << WGM10) | (1 << WGM11) | (1 << WGM13);
         break;
     }
 }
 
 void Timer1::setPrescaler(Prescaler prescaler)
 {
+    prescaler_ = prescaler;
+    clearPrescaler();
+
     switch (prescaler)
     {
-    case Prescaler::NoPrescaling:
+    case Prescaler::NO_PRESCALING:
         TCCR1B |= (1 << CS10);
         TCCR1B &= ~(1 << CS11) | (1 << CS12);
         break;
 
-    case Prescaler::Prescaling8:
+    case Prescaler::PRESCALE_8:
         TCCR1B |= (1 << CS11);
         TCCR1B &= ~(1 << CS10) | (1 << CS12);
         break;
 
-    case Prescaler::Prescale64:
+    case Prescaler::PRESCALE_64:
         TCCR1B |= (1 << CS10) | (1 << CS11);
         TCCR1B &= ~(1 << CS12);
         break;
 
-    case Prescaler::Prescale256:
+    case Prescaler::PRESCALE_256
         TCCR1B |= (1 << CS12);
         TCCR1B &= ~(1 << CS10) | (1 << CS11);
         break;
 
-    case Prescaler::Prescale1024:
+        case Prescaler::PRESCALE_1024:
         TCCR1B |= (1 << CS10) | (1 << CS12);
         TCCR1B &= ~(1 << CS11);
         break;
     }
 }
 
+void Timer1::clearPrescaler()
+{
+    TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
+}
+
 void Timer1::stopTimer()
 {
-    // Is there a way to refactor this? Cus it's redundant (see switch case) - NoPrescaler Case
-    TCCR1B |= (1 << CS10);
-    TCCR1B &= ~(1 << CS12) | (1 << CS11);
+    setPrescaler(Prescaler::NO_PRESCALING);
     timerIsRunning_ = false;
 }
 
