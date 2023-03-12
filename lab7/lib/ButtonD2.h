@@ -6,7 +6,7 @@ enum class InterruptMode
 {
     RISING_EDGE,
     FALLING_EDGE,
-    CHANGE_EDGE
+    BOTH_EDGE
 };
 
 class ButtonD2

@@ -32,6 +32,15 @@ void ButtonD2::setInterruptMode(InterruptMode mode)
         EICRA |= (1 << ISC01) | (1 << ISC00);
         break;
         // TODO: Faire les autres modes
+    case InterruptMode::FALLING_EDGE:
+        EICRA |= (1 << ISC01);
+        EICRA &= ~(1 << ISC00);
+        break;
+
+    case InterruptMode::BOTH_EDGE:
+        EICRA |= (1 << ISC00);
+        EICRA &= ~(1 << ISC01);
+        break;
     }
 }
 
