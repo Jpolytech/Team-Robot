@@ -6,15 +6,11 @@ ButtonD2::ButtonD2(InterruptMode mode = InterruptMode::RISING_EDGE)
     initialisation(mode);
 }
 
-/*
- * Methode qui initialise le bouton
- *
- * */
 void ButtonD2::initialisation(InterruptMode mode)
 {
     cli();
     setInterruptMode(mode);
-    disableInterrupt();
+    disableInterrupt(); // why not enableInterrupt()?
     sei();
 }
 
@@ -31,7 +27,7 @@ void ButtonD2::setInterruptMode(InterruptMode mode)
     case InterruptMode::RISING_EDGE:
         EICRA |= (1 << ISC01) | (1 << ISC00);
         break;
-        // TODO: Faire les autres modes
+
     case InterruptMode::FALLING_EDGE:
         EICRA |= (1 << ISC01);
         EICRA &= ~(1 << ISC00);
@@ -53,12 +49,3 @@ void ButtonD2::disableInterrupt(void)
 {
     EIMSK &= ~(1 << INT0);
 }
-
-// /*************************/
-// // methode qui renvoie le dernier etat connu du bouton
-// // renvoie un booleen
-// /*************************/
-// bool ButtonD2::getButtonState()
-// {
-//     return buttonIsPushed_;
-// }

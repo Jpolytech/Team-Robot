@@ -1,7 +1,6 @@
 #include <avr/io.h>
 #include <util/twi.h>
 
-// Classe pour la gestion de la memoire et la transmission de l'UART
 class ManagementUSART
 {
 public:

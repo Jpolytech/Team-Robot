@@ -1,26 +1,17 @@
 #include "Timer1.h"
 
-/*************************/
-// constructeur par defaut
-// aucun argument et ne renvoie rien
-/*************************/
-Timer1::Timer1(WaveformMode mode, Prescaler prescaler) : mode_(mode),
-                                                         prescaler_(prescaler)
+Timer1::Timer1(WaveformMode mode, Prescaler prescaler) : mode_(mode), prescaler_(prescaler)
 {
     timerIsRunning_ = false;
 }
 
-void Timer::startTimer(uint16_t duration, WaveformMode newMode, Prescaler newPrescaler)
+void Timer1::startTimer(uint16_t duration, WaveformMode newMode, Prescaler newPrescaler)
 {
     mode_ = newMode;
     prescaler_ = newPrescaler;
     startTimer(duration);
 }
 
-/*************************/
-// methode qui demarre la minuterie et autorise les interruptions
-// prend la duree en argument
-/*************************/
 void Timer1::startTimer(uint16_t duration)
 {
     cli();
@@ -30,50 +21,70 @@ void Timer1::startTimer(uint16_t duration)
     setWaveformMode(mode_);
     setPrescaler(prescaler_);
     TCCR1C = 0;
-    TIMSK1 = (1 << OCIE1A);
+    enableInterrupt();
     sei();
 }
 
 void Timer1::setWaveformMode(WaveformMode mode)
 {
-    // TODO : implement
     switch (mode)
     {
     case WaveformMode::Normal:
+        TCCR1A &= ~(1 << WGM10) | (1 << WGM11) | (1 << WGM12) | (1 << WGM13);
         break;
+
     case WaveformMode::CTC:
+        TCCR1A |= (1 << WGM12);
+        TCCR1A &= ~(1 << WGM10) | (1 << WGM11) | (1 << WGM13);
         break;
     }
 }
 
 void Timer1::setPrescaler(Prescaler prescaler)
 {
-    // TODO : implement
     switch (prescaler)
     {
     case Prescaler::NoPrescaling:
-        TCCR1B...;
+        TCCR1B |= (1 << CS10);
+        TCCR1B &= ~(1 << CS11) | (1 << CS12);
         break;
+
     case Prescaler::Prescaling8:
-        TCCR1B...;
+        TCCR1B |= (1 << CS11);
+        TCCR1B &= ~(1 << CS10) | (1 << CS12);
+        break;
+
+    case Prescaler::Prescale64:
+        TCCR1B |= (1 << CS10) | (1 << CS11);
+        TCCR1B &= ~(1 << CS12);
+        break;
+
+    case Prescaler::Prescale256:
+        TCCR1B |= (1 << CS12);
+        TCCR1B &= ~(1 << CS10) | (1 << CS11);
+        break;
+
+    case Prescaler::Prescale1024:
+        TCCR1B |= (1 << CS10) | (1 << CS12);
+        TCCR1B &= ~(1 << CS11);
         break;
     }
 }
 
-/*************************/
-// methode qui arrete la minuterie
-// aucun argument et ne renvoie rien
-/*************************/
 void Timer1::stopTimer()
 {
-    // TODO: Mettre prescaler à NO PRESCALER
+    // Is there a way to refactor this? Cus it's redundant (see switch case) - NoPrescaler Case
+    TCCR1B |= (1 << CS10);
+    TCCR1B &= ~(1 << CS12) | (1 << CS11);
     timerIsRunning_ = false;
 }
 
-/*************************/
-// methode qui renvoie le dernier etat de la minuterie
-// renvoie un booleen: vrai si la minuterie est demarree
-/*************************/
-// bool Timer::IsTimerRunning() {
-//     return timerIsRunning_;
-// } //not sure
+void Timer1::enableInterrupt()
+{
+    TIMSK1 = (1 << OCIE1A);
+};
+
+void Timer1::disableInterrupt()
+{
+    TIMSK1 &= ~(1 << OCIE1A);
+};

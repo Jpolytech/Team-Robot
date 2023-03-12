@@ -64,7 +64,6 @@ AVRDUDE_PROGRAMMERID=usbasp
 CC=avr-gcc
 AR = avr-ar crs
 
-
 ####### Options de compilation #######
 
 # Flags pour le compilateur en C

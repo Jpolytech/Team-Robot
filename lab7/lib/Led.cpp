@@ -19,8 +19,8 @@ Led::switchGreen()
 
 Led::switchRed()
 {
-    *portx_ &= ~(1 << greenPos_);
     *portx_ |= (1 << redPos_);
+    *portx_ &= ~(1 << greenPos_);
 }
 
 Led::switchAmber()

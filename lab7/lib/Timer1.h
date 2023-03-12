@@ -1,3 +1,4 @@
+#pragma once
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -25,15 +26,10 @@ public:
     void startTimer(uint16_t duration, WaveformMode newMode, Prescaler newPrescaler);
     void stopTimer();
 
-    bool IsTimerRunning();
-
-    // void setTimerRunning(bool value);
-
 private:
     void setWaveformMode(WaveformMode mode);
     void setPrescaler(Prescaler prescaler);
 
-    // TODO:
     void enableInterrupt();
     void disableInterrupt();
 
