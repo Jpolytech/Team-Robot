@@ -4,7 +4,7 @@
 
 int main()
 {
-    Led led = Led(&PORTA, &DDRA, PA0, PA1);
+    Led led = Led(&DDRA, &PORTA, PA0, PA1);
 
     led.switchGreen();
     _delay_ms(5000);
