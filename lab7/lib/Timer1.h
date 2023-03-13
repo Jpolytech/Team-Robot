@@ -1,6 +1,7 @@
 #pragma once
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 enum class WaveformMode
 {
@@ -25,6 +26,7 @@ public:
     void startTimer(uint16_t duration);
     void startTimer(uint16_t duration, WaveformMode newMode, Prescaler newPrescaler);
     void stopTimer();
+    bool getTimerIsRunning();
 
 private:
     void setWaveformMode(WaveformMode mode);
@@ -39,5 +41,3 @@ private:
     WaveformMode mode_;
     volatile bool timerIsRunning_ = false;
 };
-
-// ✨✨✨ Nice to have: duration in milliseconds ✨✨✨
