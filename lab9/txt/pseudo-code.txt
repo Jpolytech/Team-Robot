@@ -6,5 +6,199 @@ dal 2 ;
 att 40 ;
 det 2 ;
 
-sgo 69 ;
+sgo 69 ;//musique 1
+att 10 ;
+sar ;
 
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 74 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 78 ;
+att 25 ;
+sar ;
+
+sgo 78 ;
+att 10 ;
+sar ;
+
+sgo 76 ;
+att 10;
+sar ;
+att 33 ;
+
+
+
+sgo 69 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 74 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 76 ;
+att 25 ;
+sar ;
+
+sgo 76 ;
+att 10 ;
+sar ;
+
+sgo 74 ;
+att 25 ;
+sar ;
+
+sgo 73 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+
+
+sgo 69 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 74 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 74 ;
+att 25 ;
+sar ;
+
+sgo 76 ;
+att 10 ;
+sar ;
+
+sgo 73 ;
+att 25 ;
+sar ;
+
+sgo 69 ;
+att 10 ;
+sar ;
+
+sgo 69 ;
+att 10 ;
+sar ;
+
+sgo 76 ;
+att 25 ;
+sar ;
+
+sgo 74 ;
+att 40 ;  
+sar ;
+
+trd ;//dance 1
+trg ;
+trg ;
+trd ;
+
+sgo 69 ;//musique 2
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 74 ;
+att 10 ;
+sar ;
+
+sgo 71 ;
+att 10 ;
+sar ;
+
+sgo 78 ;
+att 25;
+sar ;
+
+sgo 78 ;
+att 10 ;
+sar ;
+
+sgo 76 ;
+att 10;
+sar ;
+
+
+
+sgo 69 ;
+sar ;
+sgo 71 ;
+sar ;
+sgo 74 ;
+sar ;
+sgo 71 ;
+sar ;
+sgo 81 ;
+sar ;
+sgo 73 ;
+sar ;
+sgo 74 ;
+sar ;
+sgo 73 ;
+sar ;
+sgo 71 ;
+sar ;
+
+sgo 69 ;
+sar ;
+sgo 71 ;
+sar ;
+sgo 74 ;
+sar ;
+sgo 71 ;
+sar ;
+sgo 74 ;
+sar ;
+sgo 76 ;
+sar ;
+sgo 73 ;
+sar ;
+sgo 69 ;
+sar ;
+sgo 69 ;
+sar ;
+sgo 76 ;
+sar ;
+sgo 74 ;
+sar ;
+
+mav 128 ;//dance 2
+att 40 ;
+mar ;
+mre 128 ;
+att 40;
+mar ;
