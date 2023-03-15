@@ -1,3 +1,16 @@
+/*
+Auteurs:
+    Andreea Maria Ghioltan
+    Maria Bourouisa
+    Jean-Philippe Salis Routhier
+    Thibault Delahaie
+
+Description de la classe: Cette classe contrôle la led libre du robot c'est-à-dire qu'elle permet de changer
+                          la couleur de la led (vert, rouge et ambre) en choisissant le port de notre choix.
+
+Identifications des broches (Broches I/O): Port au choix.
+*/
+
 #pragma once
 #define F_CPU 8000000UL
 #include <avr/io.h>

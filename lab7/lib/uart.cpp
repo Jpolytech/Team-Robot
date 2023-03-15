@@ -1,8 +1,4 @@
-#pragma once
-#ifndef F_CPU
-#define F_CPU 8000000UL
 #include "Uart.h"
-#include "Memoire_24.h"
 
 void ManagementUSART::initialisation(void)
 {
@@ -24,6 +20,6 @@ void ManagementUSART::transmissionString(char word[], uint8_t length)
 {
     for (int i = 0; i < length; i++)
     {
-        transmissionUART(word[i]);
+        transmission(word[i]);
     }
 }

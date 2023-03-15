@@ -25,13 +25,13 @@
 /*                                                                            */
 /******************************************************************************/
 
+#include "Memoire_24.h"
+
 #ifndef F_CPU
 /* fournir un avertissement mais non une erreur */
-#warning "F_CPU pas defini pour 'Memoire_24.cpp'"
+#warning "F_CPU pas defini pour 'memoire_24.cpp'"
 #define F_CPU 8000000UL
 #endif
-
-#include "Memoire_24.h"
 
 uint8_t Memoire24CXXX::m_adresse_peripherique = 0xA0;
 

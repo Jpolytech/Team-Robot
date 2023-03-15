@@ -1,4 +1,4 @@
-#include <Timer1.h>
+#include "Timer1.h"
 
 Timer1::Timer1(WaveformMode mode, Prescaler prescaler) : mode_(mode), prescaler_(prescaler)
 {
@@ -73,7 +73,7 @@ void Timer1::setPrescaler(Prescaler prescaler)
         TCCR1B &= ~(1 << CS10) | (1 << CS11);
         break;
 
-        case Prescaler::PRESCALE_1024:
+    case Prescaler::PRESCALE_1024:
         TCCR1B |= (1 << CS10) | (1 << CS12);
         TCCR1B &= ~(1 << CS11);
         break;
@@ -89,10 +89,6 @@ void Timer1::stopTimer()
 {
     setPrescaler(Prescaler::NO_PRESCALING);
     timerIsRunning_ = false;
-}
-
-bool Timer1::getTimerIsRunning() {
-    return timerIsRunning_;
 }
 
 void Timer1::enableInterrupt()
