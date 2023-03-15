@@ -1,0 +1,8 @@
+dbt ;
+dal 1 ;
+att 40 ;
+det 1;
+dal 2 ;
+att 40 ;
+det 2 ;
+fin ;
