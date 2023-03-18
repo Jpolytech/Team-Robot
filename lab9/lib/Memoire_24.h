@@ -21,7 +21,7 @@
 #ifndef MEMOIRE_24_H
 #define MEMOIRE_24_H
 
-# define F_CPU 8000000UL
+#define F_CPU 8000000UL
 
 #include <avr/io.h>
 #include <util/twi.h>
@@ -29,7 +29,6 @@
 class Memoire24CXXX
 {
 public:
-
    Memoire24CXXX(); // le constructeur appelle init() decrit plus bas
    ~Memoire24CXXX();
 
@@ -37,11 +36,11 @@ public:
    // Donc, ne pas le refaire a moins de changements en cours
    // d’utilisation.
    void init();
-   
-   // la procedure init() initialize a zero le "memory bank". 
+
+   // la procedure init() initialize a zero le "memory bank".
    // appeler cette methode uniquement si l'adresse doit changer
    static uint8_t choisir_banc(const uint8_t banc);
-   
+
    // deux variantes pour la lecture, celle-ci et la suivante
    // une donnee a la fois
    uint8_t lecture(const uint16_t adresse, uint8_t *donnee);
