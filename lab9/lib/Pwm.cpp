@@ -16,18 +16,18 @@ void Pwm::initialisation()
     TIMSK1 = (1 << OCIE1A) | (1 << OCIE1B);
 }
 
-void Pwm::movingBackward(uint8_t dutyCycle)
+void Pwm::movingBackward(uint8_t percentage)
 {
-    OCR1A = dutyCycle;
-    OCR1B = dutyCycle;
+    OCR1A = percentage*254/100;
+    OCR1B = percentage*254/100;
     PORTD |= (1 << PORTD6);
     PORTD |= (1 << PORTD7);
 }
 
-void Pwm::movingForward(uint8_t dutyCycle)
+void Pwm::movingForward(uint8_t percentage)
 {
-    OCR1A = dutyCycle;
-    OCR1B = dutyCycle;
+    OCR1A = percentage*254/100;
+    OCR1B = percentage*254/100;
     PORTD &= ~(1 << PORTD6);
     PORTD &= ~(1 << PORTD7);
 }
@@ -38,18 +38,18 @@ void Pwm::turnedOff()
     OCR1B = 0;
 }
 
-void Pwm::turnRight(uint8_t dutyCycle)
+void Pwm::turnRight(uint8_t percentage)
 {
-    OCR1A = dutyCycle;
+    OCR1A = percentage*254/100;
     OCR1B = 0;
     PORTD |= (1 << PORTD6);
     PORTD |= (1 << PORTD7);
 }
 
-void Pwm::turnLeft(uint8_t dutyCycle)
+void Pwm::turnLeft(uint8_t percentage)
 {
     OCR1A = 0;
-    OCR1B = dutyCycle;
+    OCR1B = percentage*254/100;
     PORTD |= (1 << PORTD6);
     PORTD |= (1 << PORTD7);
 }
