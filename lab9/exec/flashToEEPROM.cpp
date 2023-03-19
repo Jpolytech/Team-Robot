@@ -1,10 +1,11 @@
 //code permettant de recevoir des donnees d'un ordinateur via UART et de l'ecrire dans la memoire externe EEPROM
 
+#define F_CPU 8000000UL
 #include <avr/io.h>
 #include <util/delay.h>
-#include "../lib/Led.h"
-#include "../lib/memoire_24.h"
-#include "../lib/uart.h"
+#include "../../lib/Led.h"
+#include "../../lib/Memoire_24.h"
+#include "../../lib/Uart.h"
 
 int main() {
     //creation des objets
