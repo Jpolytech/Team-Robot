@@ -63,7 +63,9 @@ int main() {
                 switch(instruction) {
                     //attendre 25ms fois l'operandes
                     case Instructions::WAIT:
-                        _delay_ms(25 * operand); //timer necessaire?
+                        for(int i = 0; i < operand; i++){
+                            _delay_ms(25); //timer necessaire?
+                        }
                         break;
 
                     //allumer la led en vert ou rouge selon l'operande
