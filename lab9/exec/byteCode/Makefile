@@ -35,7 +35,7 @@ PRJSRC= byteCode.cpp
 INC= -I ../lib
 
 # Libraires a lier (ex: -lmylib)
-LIBS= -leredelivre -L ../lib
+LIBS= -leredelivre -L ../../lib
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
