@@ -20,8 +20,8 @@ int main() {
 
     while(true) {
         led.switchRed();
-        data = reception();
+        data = usart.receiveData();
         led.switchGreen();
-        memoire.ecriture(address++, data);
+        memory.ecriture(address++, data);
     }
 }
