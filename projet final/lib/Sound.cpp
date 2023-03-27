@@ -2,28 +2,25 @@
 
 Sound::Sound()
 {
-    DDRD |= (1 << PD7);
+	DDRD &= ~(1<<PD6);
 }
 
-void Sound::notePWM(uint8_t index)
-{
-    TCCR2A = 0;
-    TCCR2A |= (1 << COM2A0) | (1 << WGM21);
+void Sound::init() {
+	TCCR2A |= 0x00;
     TCCR2B |= (1 << CS22) | (1 << CS21);
-    OCR2A = index;
+	//TIMSK2 |= (1<<OCIE2A);
+	OCR2B = 127;
 }
 
 void Sound::playNote(uint8_t index)
 {
-    int freq;
-    double puissance = (index - 69) / 12;
-    freq = 440 * pow(2, puissance);
-    uint8_t out;
-    out = (FCPU / (freq * 2 * PRESCALER)) - 1;
-    notePWM(out);
+	DDRD |= (1 << PD7);
+	TCCR2A |= (1 << COM2A0)|(1<<WGM21);
+	OCR2A = listOCR2A[index-45]*2;
 }
 
 void Sound::stopNote()
 {
-    OCR2A = 0;
+	TCCR2A = 0x00;
+	DDRD &= ~(1 << PD7);
 }
