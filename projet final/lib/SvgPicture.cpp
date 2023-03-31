@@ -1,64 +1,54 @@
 #include "SvgPicture.h"
+#include "Uart.h"
 
 void SvgPicture::header()
 {
-    outputFile.open(fileName_);
-    outputFile << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" << endl
-               << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\"" << endl
-               << " \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">" << endl
-               << "<svg width=\"" << width_
-               << "\" height=\"" << height_ << "\">" << endl;
+    char header[] = "<!DOCTYPE html>\n"
+                    "<html>\n"
+                    "<body>\n"
+                    "<!-- Dimensions image svg -->\n"
+                    "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n"
+                    "     width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
+
+    transmitString(header, strlen(header));
 }
 
 void SvgPicture::foot()
 {
-    outputFile << "</svg>" << endl;
-    outputFile.close();
+    char footer[] = "</svg>\n"
+                    "\n"
+                    "</body>\n"
+                    "</html>";
+
+    transmitString(footer, strlen(footer));
 }
 
-void SvgPicture::drawTable(double x = 96, double y = 48, int width = 900, int height = 500, string tableColour = "black")
+void SvgPicture::drawTable()
 {
-    outputFile << "<rect x=\"" << x
-               << "\" y=\"" << y
-               << "\" width=\"" << width
-               << "\" height=\"" << height
-               << "\" fill=\"" << tableColour << "\"/>\n";
+    char table[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"48\" width=\"960\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
+
+    transmitString(table, strlen(table));
 }
 
-void SvgPicture::drawDots(double x, double y, double size = 35, double spacing, string dotColour = "black")
+void SvgPicture::drawBlackDots()
 {
-    for (double i = x; i < x + size; i += spacing)
-    {
-        for (double j = y; j < y + size; j += spacing)
-        {
-            outputFile << "<rect x=\"" << i
-                       << "\" y=\"" << j
-                       << "\" width=\"" << size
-                       << "\" height=\"" << size
-                       << "\" fill=\"" << dotColour
-                       << "\"/>\n";
-        }
-    }
 }
 
-void SvgPicture::drawGreyDisks(double cx, double cy, double r, string stroke = "black", string diskColour = "grey")
+void SvgPicture::drawRedDot()
 {
-    outputFile << "<circle cx=\"" << cx
-               << "\" cy=\"" << cy
-               << "\" r=\"" << r
-               << "\" stroke=\"" << stroke
-               << "\" fill=\"" << diskColour
-               << "\"/>\n";
 }
 
-void SvgPicture::writeTeamInformation(double x = 96, double y = 36, string fontFamily = "arial", double fontSize = 20, string fontColour = "blue")
+void SvgPicture::drawGreyDisks()
 {
-    outputFile << "<text x=\"" << x
-               << "\" y=\"" << y
-               << "\" font-family=\"" << fontFamily
-               << "\" font-size=\"" << fontSize
-               << "\" fill=\"" << fontColour
-               << "\"/>"
-               << "\"section 01 -- équipe 0108 -- BOB"
-               << "\"</text>\n";
+    // the x and y coordinates need to change according to what the Sensor class will detect
+    // char greyDisk[] = "<circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"4\" fill=\"black\" />";
+
+    // transmitString(greyDisk, strlen(greyDisk));
+}
+
+void SvgPicture::writeTeamInformation()
+{
+    char infoEquipe[] = "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">section 01 -- équipe 0108 -- BOB</text>";
+
+    transmitString(infoEquipe, strlen(infoEquipe));
 }
