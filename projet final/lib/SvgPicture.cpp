@@ -32,10 +32,22 @@ void SvgPicture::drawTable()
 
 void SvgPicture::drawBlackDots()
 {
+    char blackDot[NUM_DOTS][100];
+
+    for (int i = 0; i < NUM_DOTS; i++)
+    {
+        int x = DOT_X + i * DOT_WIDTH;
+        int y = DOT_Y;
+        sprintf(blackDot[i], "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
+        transmitString(blackDot[i], strlen(blackDot[i]));
+    }
 }
 
 void SvgPicture::drawRedDot()
 {
+    char redDot[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
+
+    transmitString(redDot, strlen(redDot));
 }
 
 void SvgPicture::drawGreyDisks()
