@@ -8,9 +8,10 @@
 class Robot {
 public:
     Robot();
+    void initialisation();
     void searchPost();
     void moveToPost();
-    void initialisation();
+    void replacePost();
 
 private:
     Pwm motor_;
