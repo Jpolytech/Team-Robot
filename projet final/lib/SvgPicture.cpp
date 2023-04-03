@@ -3,21 +3,21 @@
 
 void SvgPicture::header()
 {
-    char header[] = "<!DOCTYPE html>\n"
-                    "<html>\n"
-                    "<body>\n"
-                    "<!-- Dimensions image svg -->\n"
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n"
-                    "     width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
+    char header1[] = "<!DOCTYPE html>\n"
+                     "<html>\n"
+                     "<body>\n";
 
-    transmitString(header, strlen(header));
+    char header2[] = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n"
+                     "     width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
+
+    transmitString(header1, strlen(header1));
+    transmitString(header2, strlen(header2));
 }
 
 void SvgPicture::foot()
 {
-    char footer[] = "</svg>\n"
-                    "\n"
-                    "</body>\n"
+    char footer[] = "</svg>"
+                    "</body>"
                     "</html>";
 
     transmitString(footer, strlen(footer));
