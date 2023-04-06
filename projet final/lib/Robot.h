@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include "Sensor.h"
 #include "Pwm.h"
+#include "Uart.h"
 #include <util/delay.h>
 
 class Robot {
@@ -11,11 +12,13 @@ public:
     void initialisation();
     void searchPost();
     void moveToPost();
+    void backToSpot();
     void replacePost();
 
 private:
     Pwm motor_;
+    ManagementUSART usart_;
     Sensor sensor_;
-    uint8_t distanceObj_;
-
+    uint8_t nDistancePost_;
+    uint8_t rotateTime_;
 };

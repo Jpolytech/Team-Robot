@@ -8,8 +8,14 @@ class Sensor
 public:
     Sensor();
     uint8_t getDistance();
-    uint8_t getDistanceInCm();
+    uint8_t getSpot();
+    bool isSpotFar();
+    bool isSpotLost();
 
-private:
+//private:
     can adc_;
+    uint8_t lastDistance_;
+    const uint8_t distanceMaxFirstPos = 127;
+    const uint8_t distanceMaxSecondPos = 127; //verifier cette valeur 55
+    const uint8_t distanceMin_ = 255;
 };

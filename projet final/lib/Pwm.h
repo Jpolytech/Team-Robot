@@ -33,4 +33,6 @@ private:
     uint8_t convertTicksToPercentage(uint8_t percentage);
     uint8_t NUMBER_OF_TICKS = 254;
     uint8_t PERCENTAGE = 100;
+    const uint8_t offsetRight = 0;
+    const uint8_t offsetLeft = 5;
 };

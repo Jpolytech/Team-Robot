@@ -1,56 +1,82 @@
 #include <Robot.h>
 
-Robot::Robot() : sensor_(Sensor()), motor_(Pwm()) {
+Robot::Robot() : sensor_(Sensor()), motor_(Pwm()), usart_(ManagementUSART()) {
 
 }
 
 void Robot::initialisation() {
     motor_.initialisation();
+    usart_.initialisation();
+    rotateTime_ = 0;
 }
 
 void Robot::searchPost() {
-    motor_.turnLeft(45);
-    distanceObj_ = sensor_.getDistance();
-    while(distanceObj_ <= 57) { distanceObj_ = sensor_.getDistance(); }
+    nDistancePost_ = sensor_.getSpot();
+    usart_.transmitData(nDistancePost_);
+    if(nDistancePost_ == 0) {
+        motor_.turnLeft(50);
+    }
+    while(nDistancePost_ == 0) {
+        nDistancePost_ = sensor_.getSpot();
+        _delay_ms(10);
+        rotateTime_ += 10;
+    }
     motor_.turnedOff();
+    _delay_ms(400);
+    moveToPost();
+}
+
+//si le robot tournait trop vite lors de la recherche du poteau, cette methode permet de faire une rotation dans l'autre sens pour retrouver le poteau
+void Robot::backToSpot() {
+    while(sensor_.isSpotLost()){
+        motor_.turnRight(70);
+        _delay_ms(300);
+        motor_.turnedOff();
+        _delay_ms(400);
+    }
     moveToPost();
 }
 
 //Pour utiliser cette fonction, on suppose que le robot est dejà orienté vers le plot
 void Robot::moveToPost() {
-    distanceObj_ = sensor_.getDistance();
-    while(distanceObj_ <= 140 && distanceObj_ >= 57) { // distance comprise entre 27 et 10cm
-        distanceObj_ = sensor_.getDistance();
-        motor_.movingForward(50);
-        if(distanceObj_ >= 140) { // si distance <= 10cm
+    while(sensor_.isSpotFar()) {
+        motor_.movingForward(70);
+        if(!sensor_.isSpotFar()) {
             motor_.turnedOff();
             break;
         }
+        if(sensor_.isSpotLost()) {
+            replacePost();
+        }
     }
     motor_.turnedOff();
-    if(distanceObj_ <= 57) { // si distance >= 27cm
-        _delay_ms(1000);
-        replacePost();
+}
+
+void delay_100ms(uint8_t var) {
+    for(int i = 0; i<var; i++) {
+        _delay_ms(100);
     }
 }
 
 //en cas de perte du plot(deviation du robot), le robot le recherche
 void Robot::replacePost() {
-    while(distanceObj_ <= 57) { // si c'est >= 27cm
+    int delay_var = 3;
+    while(sensor_.isSpotLost()) {
+        usart_.transmitData(sensor_.getDistance());
         motor_.turnLeft(50);
-        _delay_ms(200);
+        delay_100ms(delay_var);
         motor_.turnedOff();
         _delay_ms(200);
-        distanceObj_ = sensor_.getDistance();
-        if(distanceObj_ <= 57) { // si distance >= 27cm
+        if(sensor_.isSpotLost()) {
             //recherche du plot de l'autre coté
             motor_.turnRight(50);
-            _delay_ms(200);
+            delay_100ms(delay_var);
             motor_.turnedOff();
             _delay_ms(200);
             sensor_.getDistance();
         }
         else {break;}
+        delay_var++;
     }
     motor_.turnedOff();
     moveToPost();
