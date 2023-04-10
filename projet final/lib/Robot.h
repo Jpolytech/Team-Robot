@@ -20,7 +20,7 @@ private:
     ManagementUSART usart_;
     Sensor sensor_;
     Position position_;
-    const uint8_t rotateConst_ = 7.5; // à partir de tests
+    const uint8_t rotateConst_ = 7; // à partir de tests (7.5 est la valeur de base)
     uint8_t nDistancePost_;
     uint8_t rotateTime_;
 };

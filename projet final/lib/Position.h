@@ -15,15 +15,16 @@ enum class Orientation {
 
 class Position {
 public:
-    Position(uint8_t angle);
-    bool newPosition(uint8_t nPost, uint8_t angle);
+    Position(uint16_t angle);
+    bool newPosition(uint8_t nPost, uint16_t angle);
     uint8_t getCurrentPositionX();
     uint8_t getCurrentPositionY();
+    uint8_t getAngle();
 
-//private:
-    Orientation newOrientation(uint8_t angle);
+private:
+    Orientation newOrientation(uint16_t angle);
     Orientation orientation_;
-    uint8_t angle_ = 0;
+    uint16_t angle_ = 0;
     uint8_t matrice_[4][8];
 	uint8_t longueur_; //nb colonnes
 	uint8_t largeur_; //nb lignes

@@ -20,12 +20,13 @@ void Robot::searchPost() {
     }
     motor_.turnedOff();
     _delay_ms(400);
-    uint8_t angle = round(rotateTime_*rotateConst_);
+    uint16_t angle = round(rotateTime_*rotateConst_);
     angle += rotateTime_/2;
     if(position_.newPosition(nDistancePost_, angle)) {
         moveToPost();
     }
     else {
+        usart_.transmitData(position_.getAngle());
         motor_.turnLeftPulse();
         searchPost();
     }
@@ -51,6 +52,7 @@ void Robot::moveToPost() {
         //usart_.transmitData(angle);
         usart_.transmitData(position_.getCurrentPositionX());
         usart_.transmitData(position_.getCurrentPositionY());
+        usart_.transmitData(position_.getAngle());
         _delay_ms(5000);
         }
 }
