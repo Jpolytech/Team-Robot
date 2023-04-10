@@ -20,6 +20,7 @@ public:
     uint8_t getCurrentPositionX();
     uint8_t getCurrentPositionY();
     uint8_t getAngle();
+    void setOrientation(uint16_t angle);
 
 private:
     Orientation newOrientation(uint16_t angle);

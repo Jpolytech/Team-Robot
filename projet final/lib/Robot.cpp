@@ -1,6 +1,6 @@
 #include <Robot.h>
 
-Robot::Robot() : sensor_(Sensor()), motor_(Pwm()), usart_(ManagementUSART()), position_(Position(0)) {
+Robot::Robot(uint16_t angle) : sensor_(Sensor()), motor_(Pwm()), usart_(ManagementUSART()), position_(Position(angle)) {
 
 }
 
@@ -30,7 +30,6 @@ void Robot::searchPost() {
         motor_.turnLeftPulse();
         searchPost();
     }
-    //moveToPost();
 }
 
 //Pour utiliser cette fonction, on suppose que le robot est dejà orienté vers le plot
@@ -47,14 +46,6 @@ void Robot::moveToPost() {
         }
     }
     motor_.turnedOff();
-    while(true) {
-        usart_.transmitData(nDistancePost_);
-        //usart_.transmitData(angle);
-        usart_.transmitData(position_.getCurrentPositionX());
-        usart_.transmitData(position_.getCurrentPositionY());
-        usart_.transmitData(position_.getAngle());
-        _delay_ms(5000);
-        }
 }
 
 void delay_100ms(uint8_t var) {

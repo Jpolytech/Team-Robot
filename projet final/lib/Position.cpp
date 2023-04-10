@@ -120,3 +120,8 @@ bool Position::newPosition(uint8_t nPost, uint16_t angle) {
     matrice_[currentPositionX_][currentPositionY_] = 1;
     return true;
 };
+
+void Position::setOrientation(uint16_t angle) {
+    angle_ = 0;
+    orientation_ = newOrientation(angle);
+}

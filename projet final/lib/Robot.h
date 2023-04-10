@@ -9,13 +9,13 @@
 
 class Robot {
 public:
-    Robot();
+    Robot(uint16_t angle);
     void initialisation();
     void searchPost();
-    void moveToPost();
-    void replacePost();
 
 private:
+    void moveToPost();
+    void replacePost();
     Pwm motor_;
     ManagementUSART usart_;
     Sensor sensor_;
