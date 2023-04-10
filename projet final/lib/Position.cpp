@@ -3,8 +3,8 @@
 Position::Position(uint8_t angle) {
     orientation_ = newOrientation(angle);
 
-    currentPosition_[0] = 0;
-    currentPosition_[1] = 0;
+    currentPositionX_ = 0;
+    currentPositionY_ = 0;
 
     longueur_ = 8;
     largeur_ = 4;
@@ -24,7 +24,7 @@ Orientation Position::newOrientation(uint8_t angle) {
     }
     else { angle_ = angle; }
     
-    if((angle_ > 0 && angle_ < 23) || (angle_ < 360 && angle_ >= 338)) {
+    if((angle_ >= 0 && angle_ < 23) || (angle_ <= 360 && angle_ >= 338)) {
         return Orientation::EAST;
     }
     else if(angle_ > 23 && angle_ < 68) {
@@ -51,61 +51,60 @@ Orientation Position::newOrientation(uint8_t angle) {
 };
 
 uint8_t Position::getCurrentPositionX() {
-    return currentPosition_[0];
+    return currentPositionX_;
 };
 
 uint8_t Position::getCurrentPositionY() {
-    return currentPosition_[1];
+    return currentPositionY_;
 };
 
 //met à jour la position du robot
 //prend en parametre nPost: le nombre d'unité entre le robot et le plot (2 max, 15.6 >= 1 unité >= 11 pouces)
 // angle: angle de rotation du robot lors du deplacement
 bool Position::newPosition(uint8_t nPost, uint8_t angle) {
-    uint8_t testCurrentPosition[2];
-    testCurrentPosition[0] = currentPosition_[0];
-    testCurrentPosition[1] = currentPosition_[1];
+    uint8_t  testCurrentPositionX = currentPositionX_;
+    uint8_t  testCurrentPositionY = currentPositionY_;
 
     Orientation testOrientation;
     testOrientation = newOrientation(angle);
 
     switch(testOrientation) {
         case Orientation::EAST:
-            testCurrentPosition[0] += nPost;
+            testCurrentPositionX += nPost;
             break;
         case Orientation::SOUTHEAST:
-            testCurrentPosition[0] += nPost;
-            testCurrentPosition[1] -= nPost;
+            testCurrentPositionX += nPost;
+            testCurrentPositionY -= nPost;
             break;
         case Orientation::SOUTH:
-            testCurrentPosition[1] -= nPost;
+            testCurrentPositionY -= nPost;
             break;
         case Orientation::SOUTHWEST:
-            testCurrentPosition[0] -= nPost;
-            testCurrentPosition[1] -= nPost;
+            testCurrentPositionX -= nPost;
+            testCurrentPositionY -= nPost;
             break;
         case Orientation::WEST:
-            testCurrentPosition[0] -= nPost;
+            testCurrentPositionX -= nPost;
             break;
         case Orientation::NORTHWEST:
-            testCurrentPosition[0] -= nPost;
-            testCurrentPosition[1] += nPost;
+            testCurrentPositionX -= nPost;
+            testCurrentPositionY += nPost;
             break;
         case Orientation::NORTH:
-            testCurrentPosition[1] += nPost;
+            testCurrentPositionY += nPost;
             break;
         case Orientation::NORTHEAST:
-            testCurrentPosition[0] += nPost;
-            testCurrentPosition[1] += nPost;
+            testCurrentPositionX += nPost;
+            testCurrentPositionY += nPost;
     }
 
     //verification si l'objet est sur la table
-    if(testCurrentPosition[0] < 0 || testCurrentPosition[0] > longueur_ || testCurrentPosition[1] < 0 || testCurrentPosition[1] > largeur_) {
+    if(testCurrentPositionX < 0 || testCurrentPositionX >= longueur_ || testCurrentPositionY < 0 || testCurrentPositionY >= largeur_) {
         return false; // dans ce cas, l'objet detecté est en dehors de la table
     }
     orientation_ = testOrientation;
-    currentPosition_[0] = testCurrentPosition[0];
-    currentPosition_[1] = testCurrentPosition[1];
-    matrice_[currentPosition_[0]][currentPosition_[1]] = 1;
+    currentPositionX_ = testCurrentPositionX;
+    currentPositionY_ = testCurrentPositionY;
+    matrice_[currentPositionX_][currentPositionY_] = 1;
     return true;
 };

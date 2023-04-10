@@ -15,10 +15,9 @@ uint8_t Sensor::getSpot() {
     if(lastDistance_ >= distanceMaxFirstPos) {
         return 1; // le poteau est dans l'entourage du robot
     }
-    /*else if(lastDistance_ >= distanceMaxSecondPos) {
-        savedDistance_ = lastDistance_;
+    else if(lastDistance_ >= distanceMaxSecondPos) {
         return 2;
-    }*/
+    }
     return 0;
 }
 

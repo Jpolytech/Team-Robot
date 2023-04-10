@@ -57,3 +57,25 @@ void Pwm::turnRight(uint8_t percentage)
     PORTB &= ~(1 << PORTB2);
     PORTB |= (1 << PORTB5);
 }
+
+void delay(uint8_t time) {
+    for(int i = 0; i<time; i++) {
+        _delay_ms(1);
+    }
+}
+
+void Pwm::turnRightPulse()
+{
+    turnRight(pulseSpeed);
+    delay(pulseDelay);
+    turnedOff();
+    delay(pulseDelayOff);
+}
+
+void Pwm::turnLeftPulse()
+{
+    turnLeft(pulseSpeed);
+    delay(pulseDelay);
+    turnedOff();
+    delay(pulseDelayOff);
+}
