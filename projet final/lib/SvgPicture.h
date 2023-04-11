@@ -14,7 +14,8 @@ public:
     void drawGreyDisks();
     void drawBlackDots();
     void drawRedDot();
-    int orientation(Point p, Point q, Point r);
+    // int orientation(Point p, Point q, Point r);
+    void drawLine();
     double calculateConvexHullArea();
     void addConvexHullArea(); // will call calculateConvexHullArea()
 

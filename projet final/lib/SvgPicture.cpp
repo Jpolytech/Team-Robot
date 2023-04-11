@@ -19,19 +19,18 @@ void SvgPicture::footer()
     char footer[] = "</svg>"
                     "</body>"
                     "</html>";
-
     transmitString(footer, strlen(footer));
 }
 
 void SvgPicture::drawTable()
 {
-    char table[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"48\" width=\"960\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
+    char table[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"48\" width=\"930\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
     transmitString(table, strlen(table));
 }
 
 void SvgPicture::drawBlackDots()
 {
-    char blackDot[N_BLACK_DOTS][100];
+    char blackDot[N_BLACK_DOTS][];
 
     for (int i = 0; i < N_BLACK_DOTS; i++)
     {
@@ -48,6 +47,14 @@ void SvgPicture::drawRedDot()
     transmitString(redDot, strlen(redDot));
 }
 
+void SvgPicture::writeTeamInformation()
+{
+    char teamInfo1[] = "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">";
+    char teamInfo2[] = "section 01 -- équipe 0108 -- BOB</text>";
+    transmitString(teamInfo1, strlen(teamInfo1));
+    transmitString(teamInfo2, strlen(teamInfo2));
+}
+
 void SvgPicture::drawGreyDisk(double x, double y)
 {
     // the x and y coordinates need to change according to what the Sensor class will detect
@@ -57,20 +64,18 @@ void SvgPicture::drawGreyDisk(double x, double y)
     transmitString(greyDisk, strlen(greyDisk));
 }
 
-void SvgPicture::writeTeamInformation()
+void SvgPicture::drawLine()
 {
-    char teamInfo[] = "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">section 01 -- équipe 0108 -- BOB</text>";
-    transmitString(teamInfo, strlen(teamInfo));
 }
 
-int SvgPicture::orientation(Point p, Point q, Point r)
-{
-    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+// int SvgPicture::orientation(Point p, Point q, Point r)
+// {
+//     int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 
-    if (val == 0)
-        return 0;             // collinear
-    return (val > 0) ? 1 : 2; // clock or counterclock wise
-}
+//     if (val == 0)
+//         return 0;             // collinear -> connect the farest points
+//     return (val > 0) ? 1 : 2; // clock or counterclock wise
+// }
 
 double SvgPicture::calculateConvexHullArea(double x, double y)
 {
