@@ -14,7 +14,7 @@ void SvgPicture::header()
     transmitString(header2, strlen(header2));
 }
 
-void SvgPicture::foot()
+void SvgPicture::footer()
 {
     char footer[] = "</svg>"
                     "</body>"
@@ -26,15 +26,14 @@ void SvgPicture::foot()
 void SvgPicture::drawTable()
 {
     char table[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"48\" width=\"960\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
-
     transmitString(table, strlen(table));
 }
 
 void SvgPicture::drawBlackDots()
 {
-    char blackDot[NUM_DOTS][100];
+    char blackDot[N_BLACK_DOTS][100];
 
-    for (int i = 0; i < NUM_DOTS; i++)
+    for (int i = 0; i < N_BLACK_DOTS; i++)
     {
         int x = DOT_X + i * DOT_WIDTH;
         int y = DOT_Y;
@@ -46,21 +45,40 @@ void SvgPicture::drawBlackDots()
 void SvgPicture::drawRedDot()
 {
     char redDot[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
-
     transmitString(redDot, strlen(redDot));
 }
 
-void SvgPicture::drawGreyDisks()
+void SvgPicture::drawGreyDisk(double x, double y)
 {
     // the x and y coordinates need to change according to what the Sensor class will detect
-    // char greyDisk[] = "<circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"4\" fill=\"black\" />";
-
-    // transmitString(greyDisk, strlen(greyDisk));
+    // coordinates need to be converted to px
+    char greyDisk[] = "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />";
+    sprintf(greyDisk, x, y);
+    transmitString(greyDisk, strlen(greyDisk));
 }
 
 void SvgPicture::writeTeamInformation()
 {
-    char infoEquipe[] = "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">section 01 -- équipe 0108 -- BOB</text>";
+    char teamInfo[] = "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">section 01 -- équipe 0108 -- BOB</text>";
+    transmitString(teamInfo, strlen(teamInfo));
+}
 
-    transmitString(infoEquipe, strlen(infoEquipe));
+int SvgPicture::orientation(Point p, Point q, Point r)
+{
+    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0)
+        return 0;             // collinear
+    return (val > 0) ? 1 : 2; // clock or counterclock wise
+}
+
+double SvgPicture::calculateConvexHullArea(double x, double y)
+{
+    // return the area...
+}
+
+void SvgPicture::addConvexHullArea(double areaValue)
+{
+    sprintf(area, "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", areaValue);
+    transmitString(area, strlen(area));
 }
