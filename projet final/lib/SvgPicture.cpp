@@ -1,6 +1,7 @@
 #include "SvgPicture.h"
 
-SvgPicture::SvgPicture(){
+SvgPicture::SvgPicture()
+{
     uart.initialisation();
 }
 
@@ -24,7 +25,7 @@ void SvgPicture::drawTable()
 
 void SvgPicture::drawBlackDot(int x, int y)
 {
-    char blackDot[110];
+    char blackDot[BLACK_DOT_ARRAY_SIZE];
     int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
     uart.transmitString(blackDot, n);
 }
@@ -48,7 +49,7 @@ void SvgPicture::drawBlackDots()
 
 void SvgPicture::drawRedDot()
 {
-    char redDot[] = "<rect  x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
+    char redDot[] = "<rect x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
     uart.transmitString(redDot, strlen(redDot));
 }
 
@@ -60,7 +61,7 @@ void SvgPicture::writeTeamInformation()
 
 void SvgPicture::drawGreyDisk(int x, int y)
 {
-    char greyDisk[90];
+    char greyDisk[GREY_DISK_ARRAY_SIZE];
     int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", x, y);
     uart.transmitString(greyDisk, n);
 }
@@ -86,10 +87,10 @@ void SvgPicture::drawGreyDisks()
 //     // return the area...
 // }
 
-// void SvgPicture::addConvexHullArea()
+// void SvgPicture::addConvexHullArea(double areaValue)
 // {
-//     // int n = sprintf(area, "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", calculateConvexHullArea());
-//     // uart.transmitString(area, n);
+//     int n = sprintf(area, "<text x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", calculateConvexHullArea(areaValue));
+//     uart.transmitString(area, n);
 // }
 
 void SvgPicture::startSvgTransmission()

@@ -7,10 +7,6 @@ class SvgPicture
 {
 public:
     SvgPicture();
-    void transfer();
-    void startSvgTransmission();
-    void endSvgTransmission();
-
     void header();
     void footer();
     void writeTeamInformation();
@@ -24,6 +20,9 @@ public:
     // int orientation(Point p, Point q, Point r);
     // double calculateConvexHullArea();
     // void addConvexHullArea(); // will call calculateConvexHullArea()
+    void transfer();
+    void startSvgTransmission();
+    void endSvgTransmission();
 
 private:
     const int MATRIX_WIDTH = 8;
@@ -34,6 +33,9 @@ private:
     const int FIRST_BLACK_DOT_X_PX= 210;
     const int FIRST_BLACK_DOT_Y_PX = 130;
     const int DOT_SPACE_PX = 100;
+
+    const int BLACK_DOT_ARRAY_SIZE = 110;
+    const int GREY_DISK_ARRAY_SIZE = 90;
     
     ManagementUSART uart;
 };
