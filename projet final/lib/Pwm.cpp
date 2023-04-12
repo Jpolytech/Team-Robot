@@ -44,16 +44,16 @@ void Pwm::turnedOff()
 
 void Pwm::turnLeft(uint8_t percentage)
 {
-    OCR0A = convertTicksToPercentage(percentage) - offsetRight;
-    OCR0B = convertTicksToPercentage(percentage) - offsetLeft;
+    OCR0A = convertTicksToPercentage(percentage);
+    OCR0B = convertTicksToPercentage(percentage);
     PORTB |= (1 << PORTB2);
     PORTB &= ~(1 << PORTB5);
 }
 
 void Pwm::turnRight(uint8_t percentage)
 {
-    OCR0A = convertTicksToPercentage(percentage) - offsetRight;
-    OCR0B = convertTicksToPercentage(percentage) - offsetLeft;
+    OCR0A = convertTicksToPercentage(percentage);
+    OCR0B = convertTicksToPercentage(percentage);
     PORTB &= ~(1 << PORTB2);
     PORTB |= (1 << PORTB5);
 }
