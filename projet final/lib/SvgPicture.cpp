@@ -28,14 +28,14 @@ void SvgPicture::drawTable()
 
 void SvgPicture::drawBlackDots()
 {
-    char blackDot[1];
+    char blackDot[110];
 
     for (int i = 0; i < N_BLACK_DOTS; i++)
     {
         int x = DOT_X + i * DOT_WIDTH;
         int y = DOT_Y;
-        int n = sprintf(blackDot[i], "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
-        transmitString(blackDot[i], n);
+        int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
+        transmitString(blackDot, n);
     }
 }
 
