@@ -3,15 +3,13 @@
 
 void SvgPicture::header()
 {
-    char header1[] = "<!DOCTYPE html>\n"
-                     "<html>\n"
-                     "<body>\n";
+    char header[] = "<!DOCTYPE html>\n"
+                    "<html>\n"
+                    "<body>\n"
+                    "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n"
+                    "width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
 
-    char header2[] = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n"
-                     "     width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
-
-    transmitString(header1, strlen(header1));
-    transmitString(header2, strlen(header2));
+    transmitString(header, strlen(header));
 }
 
 void SvgPicture::footer()
@@ -24,44 +22,42 @@ void SvgPicture::footer()
 
 void SvgPicture::drawTable()
 {
-    char table[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"48\" width=\"930\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
+    char table[] = "<rect x=\"96\" y=\"48\" width=\"930\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
     transmitString(table, strlen(table));
 }
 
 void SvgPicture::drawBlackDots()
 {
-    char blackDot[N_BLACK_DOTS][];
+    char blackDot[1];
 
     for (int i = 0; i < N_BLACK_DOTS; i++)
     {
         int x = DOT_X + i * DOT_WIDTH;
         int y = DOT_Y;
-        sprintf(blackDot[i], "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
-        transmitString(blackDot[i], strlen(blackDot[i]));
+        int n = sprintf(blackDot[i], "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
+        transmitString(blackDot[i], n);
     }
 }
 
 void SvgPicture::drawRedDot()
 {
-    char redDot[] = "<rect xmlns=\"http://www.w3.org/2000/svg\" x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
+    char redDot[] = "<rect  x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
     transmitString(redDot, strlen(redDot));
 }
 
 void SvgPicture::writeTeamInformation()
 {
-    char teamInfo1[] = "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">";
-    char teamInfo2[] = "section 01 -- équipe 0108 -- BOB</text>";
-    transmitString(teamInfo1, strlen(teamInfo1));
-    transmitString(teamInfo2, strlen(teamInfo2));
+    char teamInfo[] = "<text x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\"> section 01 -- équipe 0108 -- BOB</text>";
+    transmitString(teamInfo, strlen(teamInfo));
 }
 
 void SvgPicture::drawGreyDisk(double x, double y)
 {
     // the x and y coordinates need to change according to what the Sensor class will detect
     // coordinates need to be converted to px
-    char greyDisk[] = "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />";
-    sprintf(greyDisk, x, y);
-    transmitString(greyDisk, strlen(greyDisk));
+    char greyDisk[90];
+    int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", x, y);
+    transmitString(greyDisk, n);
 }
 
 void SvgPicture::drawLine()
@@ -82,8 +78,8 @@ double SvgPicture::calculateConvexHullArea(double x, double y)
     // return the area...
 }
 
-void SvgPicture::addConvexHullArea(double areaValue)
+void SvgPicture::addConvexHullArea()
 {
-    sprintf(area, "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", areaValue);
-    transmitString(area, strlen(area));
+    int n = sprintf(area, "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", calculateConvexHullArea());
+    transmitString(area, n);
 }
