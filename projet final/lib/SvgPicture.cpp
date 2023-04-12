@@ -1,67 +1,75 @@
 #include "SvgPicture.h"
-#include "Uart.h"
+
+SvgPicture::SvgPicture(){
+    uart.initialisation();
+}
 
 void SvgPicture::header()
 {
-    char header[] = "<!DOCTYPE html>\n"
-                    "<html>\n"
-                    "<body>\n"
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n"
-                    "width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
-
-    transmitString(header, strlen(header));
+    char header[] = "<svg width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
+    uart.transmitString(header, strlen(header));
 }
 
 void SvgPicture::footer()
 {
-    char footer[] = "</svg>"
-                    "</body>"
-                    "</html>";
-    transmitString(footer, strlen(footer));
+    char footer[] = "</svg>";
+    uart.transmitString(footer, strlen(footer));
 }
 
 void SvgPicture::drawTable()
 {
     char table[] = "<rect x=\"96\" y=\"48\" width=\"930\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
-    transmitString(table, strlen(table));
+    uart.transmitString(table, strlen(table));
+}
+
+void SvgPicture::drawBlackDot(int x, int y)
+{
+    char blackDot[110];
+    int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
+    uart.transmitString(blackDot, n);
 }
 
 void SvgPicture::drawBlackDots()
 {
-    char blackDot[110];
-
-    for (int i = 0; i < N_BLACK_DOTS; i++)
+    for (int i = 0; i < MATRIX_WIDTH; i++)
     {
-        int x = DOT_X + i * DOT_WIDTH;
-        int y = DOT_Y;
-        int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
-        transmitString(blackDot, n);
+        for (int j = 0; j < MATRIX_HEIGHT; j++)
+        {
+            if (i == 0 && j == 3)
+            {
+                continue;
+            }
+            int x = FIRST_BLACK_DOT_X_PX + i * DOT_SPACE_PX;
+            int y = FIRST_BLACK_DOT_Y_PX + j * DOT_SPACE_PX;
+            drawBlackDot(x, y);
+        }
     }
 }
 
 void SvgPicture::drawRedDot()
 {
     char redDot[] = "<rect  x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
-    transmitString(redDot, strlen(redDot));
+    uart.transmitString(redDot, strlen(redDot));
 }
 
 void SvgPicture::writeTeamInformation()
 {
     char teamInfo[] = "<text x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\"> section 01 -- équipe 0108 -- BOB</text>";
-    transmitString(teamInfo, strlen(teamInfo));
+    uart.transmitString(teamInfo, strlen(teamInfo));
 }
 
-void SvgPicture::drawGreyDisk(double x, double y)
+void SvgPicture::drawGreyDisk(int x, int y)
 {
-    // the x and y coordinates need to change according to what the Sensor class will detect
-    // coordinates need to be converted to px
     char greyDisk[90];
     int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", x, y);
-    transmitString(greyDisk, n);
+    uart.transmitString(greyDisk, n);
 }
 
-void SvgPicture::drawLine()
+void SvgPicture::drawGreyDisks()
 {
+    // methode pour dessiner tous les disques gris
+    // prendre les coordonnes de tous les points noirs stockés en memoire et appeler drawGreyDisk() 
+    // -> on itere dessus ? probablement envoyer un tableau de coordonnees dans la flash
 }
 
 // int SvgPicture::orientation(Point p, Point q, Point r)
@@ -73,13 +81,34 @@ void SvgPicture::drawLine()
 //     return (val > 0) ? 1 : 2; // clock or counterclock wise
 // }
 
-double SvgPicture::calculateConvexHullArea(double x, double y)
+// double SvgPicture::calculateConvexHullArea(double x, double y)
+// {
+//     // return the area...
+// }
+
+// void SvgPicture::addConvexHullArea()
+// {
+//     // int n = sprintf(area, "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", calculateConvexHullArea());
+//     // uart.transmitString(area, n);
+// }
+
+void SvgPicture::startSvgTransmission()
 {
-    // return the area...
+    uart.transmitData(0x02);
 }
 
-void SvgPicture::addConvexHullArea()
+void SvgPicture::endSvgTransmission()
 {
-    int n = sprintf(area, "<text xmlns=\"http://www.w3.org/2000/svg\" x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", calculateConvexHullArea());
-    transmitString(area, n);
+    uart.transmitData(0x03);
+}
+
+void SvgPicture::transfer() 
+{
+    startSvgTransmission();
+    header();
+    drawTable();
+    drawBlackDots();
+    drawRedDot();
+    writeTeamInformation();
+    endSvgTransmission();    
 }
