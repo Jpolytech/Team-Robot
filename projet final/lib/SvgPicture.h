@@ -2,6 +2,7 @@
 #include "Uart.h"
 #include <string.h>
 #include <stdio.h>
+#include <util/crc16.h>
 
 class SvgPicture
 {
@@ -23,6 +24,8 @@ public:
     void transfer();
     void startSvgTransmission();
     void endSvgTransmission();
+    void endTransmission();
+    int checkCRC();
 
 private:
     const int MATRIX_WIDTH = 8;
@@ -30,12 +33,12 @@ private:
 
     const int DOT_WIDTH = 10;
     const int DOT_HEIGHT = 10;
-    const int FIRST_BLACK_DOT_X_PX= 210;
+    const int FIRST_BLACK_DOT_X_PX = 210;
     const int FIRST_BLACK_DOT_Y_PX = 130;
     const int DOT_SPACE_PX = 100;
 
     const int BLACK_DOT_ARRAY_SIZE = 110;
     const int GREY_DISK_ARRAY_SIZE = 90;
-    
+
     ManagementUSART uart;
 };

@@ -69,7 +69,7 @@ void SvgPicture::drawGreyDisk(int x, int y)
 void SvgPicture::drawGreyDisks()
 {
     // methode pour dessiner tous les disques gris
-    // prendre les coordonnes de tous les points noirs stockés en memoire et appeler drawGreyDisk() 
+    // prendre les coordonnes de tous les points noirs stockés en memoire et appeler drawGreyDisk()
     // -> on itere dessus ? probablement envoyer un tableau de coordonnees dans la flash
 }
 
@@ -103,7 +103,12 @@ void SvgPicture::endSvgTransmission()
     uart.transmitData(0x03);
 }
 
-void SvgPicture::transfer() 
+void SvgPicture::endTransmission()
+{
+    uart.transmitData(0x04);
+}
+
+void SvgPicture::transfer()
 {
     startSvgTransmission();
     header();
@@ -111,5 +116,10 @@ void SvgPicture::transfer()
     drawBlackDots();
     drawRedDot();
     writeTeamInformation();
-    endSvgTransmission();    
+    endSvgTransmission();
+}
+
+int SvgPicture::checkCRC(void)
+{
+    // voir lien documentation sur Notion
 }
