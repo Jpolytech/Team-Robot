@@ -1,22 +1,17 @@
 #include <Robot.h>
 
 Robot::Robot(uint16_t angle) : sensor_(Sensor()), motor_(Pwm()), usart_(ManagementUSART()), position_(Position(angle)), memory_(Memoire24CXXX()) {
-
 }
 
 void Robot::initialisation() {
     motor_.initialisation();
     usart_.initialisation();
-    //memory_.init();
+    memory_.init();
     rotateTime_ = 0;
     memoryAdress_ = 0x0000;
 }
 
 void Robot::searchPost() {
-    //********************************************************************* RETIRER
-    motor_.turnLeft(65);
-    _delay_ms(3000);
-    //*******************************************************************
     rotateTime_ = 0;
     nDistancePost_ = sensor_.getSpot();
     while(nDistancePost_ == 0) {

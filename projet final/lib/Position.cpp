@@ -56,6 +56,7 @@ Orientation Position::newOrientation(uint16_t angle) {
         angle_ = 315;
         return Orientation::SOUTHEAST;
     }
+    return {};
 };
 
 uint8_t Position::getCurrentPositionX() {
