@@ -23,7 +23,7 @@ void SvgPicture::drawTable()
     uart_.transmitString(table, strlen(table));
 }
 
-void SvgPicture::drawBlackDot(int x, int y)
+void SvgPicture::drawBlackDot(uint16_t x, uint16_t y)
 {
     char blackDot[BLACK_DOT_ARRAY_SIZE];
     int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
@@ -32,17 +32,17 @@ void SvgPicture::drawBlackDot(int x, int y)
 
 void SvgPicture::drawBlackDots()
 {
-    for (int i = 0; i < MATRIX_WIDTH; i++)
+    for (uint8_t i = 0; i < MATRIX_WIDTH; i++)
     {
-        for (int j = 0; j < MATRIX_HEIGHT; j++)
+        for (uint8_t j = 0; j < MATRIX_HEIGHT; j++)
         {
             if (i == 0 && j == 3)
             {
                 continue;
             }
-            int x = FIRST_BLACK_DOT_X_PX + i * DOT_SPACE_PX;
-            int y = FIRST_BLACK_DOT_Y_PX + j * DOT_SPACE_PX;
-            drawBlackDot(x, y);
+            uint16_t pixelX = FIRST_BLACK_DOT_X_PX + i * DOT_SPACE_PX;
+            uint16_t pixelY = FIRST_BLACK_DOT_Y_PX + j * DOT_SPACE_PX;
+            drawBlackDot(pixelX, pixelY);
         }
     }
 }
@@ -59,18 +59,22 @@ void SvgPicture::writeTeamInformation()
     uart_.transmitString(teamInfo, strlen(teamInfo));
 }
 
-void SvgPicture::drawGreyDisk(int x, int y)
+void SvgPicture::drawGreyDisk(uint16_t x, uint16_t y)
 {
     char greyDisk[GREY_DISK_ARRAY_SIZE];
     int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", x, y);
     uart_.transmitString(greyDisk, n);
 }
 
-void SvgPicture::drawGreyDisks()
+void SvgPicture::drawGreyDisks(Pole poles[], uint8_t nPoles)
 {
-    // methode pour dessiner tous les disques gris
-    // prendre les coordonnes de tous les points noirs stockés en memoire et appeler drawGreyDisk()
-    // -> on itere dessus ? probablement envoyer un tableau de coordonnees dans la flash
+    for (uint8_t i = 0; i < nPoles; i++)
+    {
+        Pole pole = poles[i];
+        uint16_t pixelX = FIRST_BLACK_DOT_X_PX + pole.x * DOT_SPACE_PX;
+        uint16_t pixelY = FIRST_BLACK_DOT_Y_PX + pole.y * DOT_SPACE_PX;
+        drawGreyDisk(pixelX, pixelY);
+    }
 }
 
 // int SvgPicture::orientation(Point p, Point q, Point r)
@@ -101,68 +105,71 @@ void SvgPicture::startSvgTransmission()
 void SvgPicture::endSvgTransmission()
 {
     uart_.transmitData(0x03);
-
-<<<<<<< HEAD
 }
-void SvgPicture::fetchPositions() 
-=======
+
 void SvgPicture::endTransmission()
 {
     uart.transmitData(0x04);
 }
 
-void SvgPicture::transfer()
->>>>>>> 6b231f095f7dbbc0f975e2eb88ff74571b5131aa
+uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
 {
-    
-    Pole poles[8];
-    uint8_t nPoles = 0; 
-    
     const uint8_t NO_MORE_POLES = 0xff; // à mettre en attribut de la classe
-    
-    int x, y;
-    int address = 0;
 
-    do {
+    uint8_t nPoles = 0;
+
+    uint8_t x, y, nextByte;
+    uint8_t address = 0;
+
+    do
+    {
         memory_.lecture(address++, &x);
+        _delay_ms(5);
+
         memory_.lecture(address++, &y);
-    }
+        _delay_ms(5);
 
-    while ();
-    return poles
-}void SvgPicture::transfer() 
+        poles[nPoles++] = {x, y};
+
+        memory_.lecture(address, &nextByte);
+        _delay_ms(5);
+    } while (nextByte != NO_MORE_POLES);
+
+    return nPoles;
+}
+
+void SvgPicture::transfer()
 {
-
+    Pole poles[8];
+    uint8_t nPoles = fetchPositions(poles);
 
     startSvgTransmission();
     header();
     drawTable();
     drawBlackDots();
     drawRedDot();
+
+    drawGreyDisks(poles, nPoles);
+
     writeTeamInformation();
-<<<<<<< HEAD
-    endSvgTransmission();    
+    endSvgTransmission();
 }
 
 // Memory map
 {
-    x1, // 0
-    y1, // 1
+    x1,     // 0
+        y1, // 1
 
-    x2, // 2
-    y2, // 3
+        x2, // 2
+        y2, // 3
 
-    x3, // 4
-    y3, // 5
+        x3, // 4
+        y3, // 5
 
-    0xff, // 6
-}
-=======
-    endSvgTransmission();
+        0xff, // 6
 }
 
 int SvgPicture::checkCRC(void)
 {
     // voir lien documentation sur Notion
 }
->>>>>>> 6b231f095f7dbbc0f975e2eb88ff74571b5131aa

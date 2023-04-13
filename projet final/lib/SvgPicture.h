@@ -9,29 +9,35 @@ class SvgPicture
 {
 public:
     SvgPicture();
-    
+
     struct Pole
     {
         int x, y;
     };
-    
+
     void header();
     void footer();
+
     void writeTeamInformation();
 
+    uint8_t readPolesFromMemory(Pole poles[8]);
+
     void drawTable();
-    void drawGreyDisk(int x, int y);
-    void drawGreyDisks();
+    void drawGreyDisk(iuint16_tnt pixelX, uint16_t pixelY);
+    void drawGreyDisks(Pole poles[], uint8_t nPoles);
     void drawBlackDots();
-    void drawBlackDot(int x, int y);
+    void drawBlackDot(uint16_t pixelX, uint16_t pixelY);
     void drawRedDot();
     // int orientation(Point p, Point q, Point r);
     // double calculateConvexHullArea();
     // void addConvexHullArea(); // will call calculateConvexHullArea()
     void transfer();
+
+    // Transmission bytes
     void startSvgTransmission();
     void endSvgTransmission();
     void endTransmission();
+
     int checkCRC();
 
 private:
@@ -46,12 +52,7 @@ private:
 
     const int BLACK_DOT_ARRAY_SIZE = 110;
     const int GREY_DISK_ARRAY_SIZE = 90;
-<<<<<<< HEAD
-    
+
     ManagementUSART uart_;
     Memoire24CXXX memory_;
-=======
-
-    ManagementUSART uart;
->>>>>>> 6b231f095f7dbbc0f975e2eb88ff74571b5131aa
 };
