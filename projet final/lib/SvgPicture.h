@@ -1,5 +1,6 @@
 #pragma once
 #include "Uart.h"
+#include "Memoire_24.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -7,6 +8,12 @@ class SvgPicture
 {
 public:
     SvgPicture();
+    
+    struct Pole
+    {
+        int x, y;
+    };
+    
     void header();
     void footer();
     void writeTeamInformation();
@@ -37,5 +44,6 @@ private:
     const int BLACK_DOT_ARRAY_SIZE = 110;
     const int GREY_DISK_ARRAY_SIZE = 90;
     
-    ManagementUSART uart;
+    ManagementUSART uart_;
+    Memoire24CXXX memory_;
 };
