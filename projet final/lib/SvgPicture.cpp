@@ -77,47 +77,9 @@ void SvgPicture::drawGreyDisks(Pole poles[], uint8_t nPoles)
     }
 }
 
-// int SvgPicture::orientation(Point p, Point q, Point r)
-// {
-//     int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-
-//     if (val == 0)
-//         return 0;             // collinear -> connect the farest points
-//     return (val > 0) ? 1 : 2; // clock or counterclock wise
-// }
-
-// double SvgPicture::calculateConvexHullArea(double x, double y)
-// {
-//     // return the area...
-// }
-
-// void SvgPicture::addConvexHullArea(double areaValue)
-// {
-//     int n = sprintf(area, "<text x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">Aire: %.2f</text>", calculateConvexHullArea(areaValue));
-//     uart_.transmitString(area, n);
-// }
-
-void SvgPicture::startSvgTransmission()
-{
-    uart_.transmitData(0x02);
-}
-
-void SvgPicture::endSvgTransmission()
-{
-    uart_.transmitData(0x03);
-}
-
-void SvgPicture::endTransmission()
-{
-    uart_.transmitData(0x04);
-}
-
 uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
 {
-    const uint8_t NO_MORE_POLES = 0xff; // à mettre en attribut de la classe
-
     uint8_t nPoles = 0;
-
     uint8_t x, y, nextByte;
     uint8_t address = 0;
 
@@ -138,24 +100,149 @@ uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
     return nPoles;
 }
 
+void SvgPicture::drawPolygon(Pole convexHull[], uint8_t nHullPoints)
+{
+    // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon
+    // dessiner une balise "polygone" avec les points de l'enveloppe
+    char polygon[POLYGON_ARRAY_SIZE];
+    int n1 = sprintf(polygon, "<polygon points=\" 0,");
+    uart_.transmitString(polygon, n1);
+
+    for (int i = 0; i < nHullPoints; i++)
+    {
+        int n2 = sprintf(polygon, "%d %d,", convexHull[i].x, convexHull[i].y);
+        uart_.transmitString(polygon, n2);
+    }
+    int n3 = sprintf(polygon, "0\" style=\"fill: green;\" />");
+    uart_.transmitString(polygon, n3);
+}
+
+uint8_t SvgPicture::findAnchorPoint(Pole poles[], uint8_t nPoles)
+{
+    uint8_t anchorPoint = 0;
+    for (uint8_t i = 1; i < nPoles; i++)
+    {
+        if (poles[i].x < poles[anchorPoint].x && poles[i].y < poles[anchorPoint].y)
+        {
+            anchorPoint = i;
+        }
+    }
+    return anchorPoint;
+}
+
+int SvgPicture::crossProduct(Pole p1, Pole p2, Pole p3)
+{
+    return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
+}
+
+int SvgPicture::dist(Pole p1, Pole p2)
+{
+    return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+}
+
+void SvgPicture::swapPoles(Pole poles[], uint8_t i, uint8_t j)
+{
+    Pole temp = poles[i];
+    poles[i] = poles[j];
+    poles[j] = temp;
+}
+
+void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint)
+{
+    // sort points by polar angle with P0
+    for (uint8_t i = 1; i < nPoles; i++)
+    {
+        for (uint8_t j = 1; j < nPoles - 1 - i; j++)
+        {
+            int crossProduct = crossProduct(anchorPoint, poles[i], poles[j]);
+
+            if (crossProduct < 0)
+            {
+                // if the result is 0, the points are collinear -> take the farthest one and swap it with the next point in the array
+                // if the result is negative, the three points constitute a "right turn" or clockwise orientation
+                swapPoles(poles, i, j);
+            }
+            else if (crossProduct == 0) // colinear
+            {
+                // je te recommande dans les sorts dans ce cas par distance, ça va grandement simplifier la
+                // prochaine étape qui consiste à garder les points les plus éloignés
+                if (dist(anchorPoint, i) > dist(anchorPoint, j))
+                {
+                    // TODO : garder le point le plus éloigné au début de la suite colinéaire
+                    // et enlever le + proche de la liste
+                    swapPoles(poles, i, j);
+                }
+            }
+        }
+    }
+}
+
+void SvgPicture::keepFarthestPoints(Pole poles[], uint8_t &nPoles, Pole anchorPoint)
+{
+}
+
+void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
+{
+    Pole convexHull[8]; // "stack" des points de l'enveloppe (résultat du prochain algorithme)
+    uint8_t nConvexHull = 0;
+
+    // voir pseudo code : https://en.wikipedia.org/wiki/Graham_scan
+    // 1. find the leftmost point p0 and put it in the first position in the output hull
+    uint8_t anchorIndex = findAnchorPoint(poles, nPoles);
+    Pole anchorPoint = poles[anchorIndex];
+
+    convexHull[nConvexHull++] = anchorPoint;
+
+    // 2. swap p0 with the first point in the array
+    swapPoles(poles[0], anchorPoint);
+
+    // 3. sort the points by polar angle with p0
+    sortByPolarAngle(poles, nPoles, anchorPoint);
+    keepFarthestPoints(poles, nPoles);
+
+    // 4. push p1 to the stack
+    convexHull[nConvexHull++] = poles[1];
+
+    // 5. Iterate over each point in the sorted array and see if traversing to a point from the previous two points makes a clockwise
+    // or a counter-clockwise direction. If clockwise then reject the point and move on to the next point. Continue this till the end of the sorted array.
+    // propably append the points to the stack
+
+    drawPolygon(convexHull[], nConvexHull);
+}
+
+// void SvgPicture::findConvexHullArea(){}
+
+void SvgPicture::startSvgTransmission()
+{
+    uart_.transmitData(0x02);
+}
+
+void SvgPicture::endSvgTransmission()
+{
+    uart_.transmitData(0x03);
+}
+
+void SvgPicture::endTransmission()
+{
+    uart_.transmitData(0x04);
+}
+
 void SvgPicture::transfer()
 {
     Pole poles[8];
     uint8_t nPoles = readPolesFromMemory(poles);
+    // int SvgPicture::checkCRC(void)
+    // {
+    //     // voir lien documentation sur Notion
+    // }
 
     startSvgTransmission();
     header();
     drawTable();
     drawBlackDots();
     drawRedDot();
-
-    drawGreyDisks(poles, nPoles);
-
     writeTeamInformation();
+    drawGreyDisks(poles, nPoles);
+    drawConvexHull(poles, nPoles);
     endSvgTransmission();
 }
-
-// int SvgPicture::checkCRC(void)
-// {
-//     // voir lien documentation sur Notion
-// }

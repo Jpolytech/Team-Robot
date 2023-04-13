@@ -29,8 +29,17 @@ public:
     void drawBlackDots();
     void drawBlackDot(uint16_t pixelX, uint16_t pixelY);
     void drawRedDot();
-    // double calculateConvexHullArea();
-    // void addConvexHullArea(); // will call calculateConvexHullArea()
+
+    void swapPoles(Pole poles[], uint8_t i, uint8_t j);
+    int crossProduct(Pole p1, Pole p2, Pole p3);
+    int dist(Pole p1, Pole p2);
+    uint8_t findAnchorPoint(Pole poles[], uint8_t nPoles);
+    void sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint);
+    void drawConvexHull(Pole poles[], uint8_t nPoles);
+    void drawPolygon(Pole convexHull[], uint8_t nHullPoints);
+
+    // void findConvexHullArea(){}
+
     void transfer();
 
     // Transmission bytes
@@ -38,7 +47,7 @@ public:
     void endSvgTransmission();
     void endTransmission();
 
-    //int checkCRC();
+    // int checkCRC();
 
 private:
     const int MATRIX_WIDTH = 8;
@@ -52,6 +61,9 @@ private:
 
     const int BLACK_DOT_ARRAY_SIZE = 110;
     const int GREY_DISK_ARRAY_SIZE = 90;
+    const int POLYGON_ARRAY_SIZE = 90;
+
+    const uint8_t NO_MORE_POLES = 0xff;
 
     ManagementUSART uart_;
     Memoire24CXXX memory_;
