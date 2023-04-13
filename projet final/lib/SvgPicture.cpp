@@ -109,7 +109,7 @@ void SvgPicture::endSvgTransmission()
 
 void SvgPicture::endTransmission()
 {
-    uart.transmitData(0x04);
+    uart_.transmitData(0x04);
 }
 
 uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
@@ -141,7 +141,7 @@ uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
 void SvgPicture::transfer()
 {
     Pole poles[8];
-    uint8_t nPoles = fetchPositions(poles);
+    uint8_t nPoles = readPolesFromMemory(poles);
 
     startSvgTransmission();
     header();
@@ -155,21 +155,7 @@ void SvgPicture::transfer()
     endSvgTransmission();
 }
 
-// Memory map
-{
-    x1,     // 0
-        y1, // 1
-
-        x2, // 2
-        y2, // 3
-
-        x3, // 4
-        y3, // 5
-
-        0xff, // 6
-}
-
-int SvgPicture::checkCRC(void)
-{
-    // voir lien documentation sur Notion
-}
+// int SvgPicture::checkCRC(void)
+// {
+//     // voir lien documentation sur Notion
+// }

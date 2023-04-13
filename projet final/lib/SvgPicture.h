@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <util/crc16.h>
+#include <util/delay.h>
 
 class SvgPicture
 {
@@ -23,12 +24,11 @@ public:
     uint8_t readPolesFromMemory(Pole poles[8]);
 
     void drawTable();
-    void drawGreyDisk(iuint16_tnt pixelX, uint16_t pixelY);
+    void drawGreyDisk(uint16_t pixelX, uint16_t pixelY);
     void drawGreyDisks(Pole poles[], uint8_t nPoles);
     void drawBlackDots();
     void drawBlackDot(uint16_t pixelX, uint16_t pixelY);
     void drawRedDot();
-    // int orientation(Point p, Point q, Point r);
     // double calculateConvexHullArea();
     // void addConvexHullArea(); // will call calculateConvexHullArea()
     void transfer();
@@ -38,7 +38,7 @@ public:
     void endSvgTransmission();
     void endTransmission();
 
-    int checkCRC();
+    //int checkCRC();
 
 private:
     const int MATRIX_WIDTH = 8;
