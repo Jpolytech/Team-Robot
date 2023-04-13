@@ -16,6 +16,7 @@ public:
     can adc_;
     uint8_t lastDistance_;
     const uint8_t distanceMaxFirstPos = 127;
-    const uint8_t distanceMaxSecondPos = 127; //verifier cette valeur 55
+    const uint8_t distanceMinSecondPos = 90;
+    const uint8_t distanceMaxSecondPos = 55; //verifier cette valeur 55
     const uint8_t distanceMin_ = 255;
 };
