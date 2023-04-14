@@ -23,7 +23,7 @@ void SvgPicture::drawTable()
     uart_.transmitString(table, strlen(table));
 }
 
-void SvgPicture::drawBlackDot(uint16_t x, uint16_t y)
+void SvgPicture::drawBlackDot(uint16_t pixelX, uint16_t pixelY)
 {
     char blackDot[BLACK_DOT_ARRAY_SIZE];
     int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
@@ -59,10 +59,10 @@ void SvgPicture::writeTeamInformation()
     uart_.transmitString(teamInfo, strlen(teamInfo));
 }
 
-void SvgPicture::drawGreyDisk(uint16_t x, uint16_t y)
+void SvgPicture::drawGreyDisk(uint16_t pixelX, uint16_t pixelY)
 {
     char greyDisk[GREY_DISK_ARRAY_SIZE];
-    int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", x, y);
+    int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", pixelX, pixelY);
     uart_.transmitString(greyDisk, n);
 }
 
@@ -147,6 +147,21 @@ void SvgPicture::swapPoles(Pole poles[], uint8_t i, uint8_t j)
     poles[j] = temp;
 }
 
+void SvgPicture::keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole)
+{
+    for (uint8_t i = 1; i < nPoles; i++)
+    {
+        for (uint8_t j = 1; j < nPoles - 1 - i; j++)
+        {
+            if (poles[i] == unwantedPole)
+            {
+                poles[i] = poles[j];
+                nPoles--;
+            }
+        }
+    }
+}
+
 void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint)
 {
     // sort points by polar angle with P0
@@ -154,31 +169,30 @@ void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint
     {
         for (uint8_t j = 1; j < nPoles - 1 - i; j++)
         {
-            int crossProduct = crossProduct(anchorPoint, poles[i], poles[j]);
+            int crossProduct = SvgPicture::crossProduct(anchorPoint, poles[i], poles[j]);
 
             if (crossProduct < 0)
             {
-                // if the result is 0, the points are collinear -> take the farthest one and swap it with the next point in the array
                 // if the result is negative, the three points constitute a "right turn" or clockwise orientation
                 swapPoles(poles, i, j);
             }
             else if (crossProduct == 0) // colinear
             {
-                // je te recommande dans les sorts dans ce cas par distance, ça va grandement simplifier la
+                // if the result is 0, the points are collinear -> take the farthest one and swap it with the next point in the array
+                // sort dans ce cas par distance, ça va grandement simplifier la
                 // prochaine étape qui consiste à garder les points les plus éloignés
                 if (dist(anchorPoint, i) > dist(anchorPoint, j))
                 {
                     // TODO : garder le point le plus éloigné au début de la suite colinéaire
                     // et enlever le + proche de la liste
                     swapPoles(poles, i, j);
+                    keepFarthestPoint(poles, nPoles, i)
                 }
             }
+            else
+                continue;
         }
     }
-}
-
-void SvgPicture::keepFarthestPoints(Pole poles[], uint8_t &nPoles, Pole anchorPoint)
-{
 }
 
 void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
@@ -210,7 +224,7 @@ void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
     drawPolygon(convexHull[], nConvexHull);
 }
 
-// void SvgPicture::findConvexHullArea(){}
+// int SvgPicture::findConvexHullArea(){}
 
 void SvgPicture::startSvgTransmission()
 {
