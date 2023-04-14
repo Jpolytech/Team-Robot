@@ -22,15 +22,19 @@ public:
     void writeTeamInformation();
 
     void drawTable();
-    void drawGreyDisk(uint16_t pixelX, uint16_t pixelY);
-    void drawGreyDisks(Pole poles[], uint8_t nPoles);
     void drawBlackDot(uint16_t pixelX, uint16_t pixelY);
     void drawBlackDots();
     void drawRedDot();
+    void drawGreyDisk(uint16_t pixelX, uint16_t pixelY);
+    void drawGreyDisks(Pole poles[], uint8_t nPoles);
 
     uint8_t readPolesFromMemory(Pole poles[8]);
+    uint16_t computeArea(Pole stack[], uint8_t stackSize);
+    void writeConvexHullArea(uint16_t areaValue);
 
+    // enlever a la fin
     void printPoles(Pole poles[], uint8_t nPoles);
+
     void swapPoles(Pole poles[], uint8_t i, uint8_t j);
     void keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole);
     int crossProduct(Pole p1, Pole p2, Pole p3);
@@ -39,8 +43,6 @@ public:
     void sortByPolarAngle(Pole poles[], uint8_t& nPoles, Pole anchorPoint);
     void drawConvexHull(Pole poles[], uint8_t nPoles);
     void drawPolygon(Pole convexHull[], uint8_t nHullPoints);
-
-    // int findConvexHullArea(){}
 
     void transfer();
 
@@ -65,9 +67,11 @@ private:
     const int FIRST_BLACK_DOT_X_PX = 210;
     const int FIRST_BLACK_DOT_Y_PX = 130;
     const int DOT_SPACE_PX = 100;
+    const int DOT_SPACE_INCHES = 11;
 
     const int BLACK_DOT_ARRAY_SIZE = 110;
     const int GREY_DISK_ARRAY_SIZE = 90;
+    const int AREA_ARRAY_SIZE = 110;
     const int POLYGON_ARRAY_SIZE = 90;
 
     const uint8_t NO_MORE_POLES = 0xff;

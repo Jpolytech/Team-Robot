@@ -59,10 +59,17 @@ void SvgPicture::writeTeamInformation()
     uart_.transmitString(teamInfo, strlen(teamInfo));
 }
 
+void SvgPicture::writeConvexHullArea(uint16_t areaValue)
+{
+    char area[AREA_ARRAY_SIZE];
+    int n = sprintf(area, "<text x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">AIRE: %d pouces carrés </text>", areaValue);
+    uart_.transmitString(area, n);
+}
+
 void SvgPicture::drawGreyDisk(uint16_t pixelX, uint16_t pixelY)
 {
     char greyDisk[GREY_DISK_ARRAY_SIZE];
-    int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"20\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", pixelX, pixelY);
+    int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"15\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", pixelX, pixelY);
     uart_.transmitString(greyDisk, n);
 }
 
@@ -100,6 +107,7 @@ uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
     return nPoles;
 }
 
+// enlever a la fin
 void SvgPicture::printPoles(Pole poles[], uint8_t nPoles) 
 {
     for (int i=0; i<nPoles; i++) {
@@ -132,7 +140,6 @@ void SvgPicture::drawPolygon(Pole convexHull[], uint8_t nHullPoints)
     // updateCrcString(polygon, n3);
 }
 
-
 uint8_t SvgPicture::findAnchorPoint(Pole poles[], uint8_t nPoles)
 {
     uint8_t anchorPoint = 0;
@@ -158,6 +165,24 @@ int SvgPicture::crossProduct(Pole p1, Pole p2, Pole p3)
 int SvgPicture::dist(Pole p1, Pole p2)
 {
     return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+}
+
+uint16_t SvgPicture::computeArea(Pole stack[], uint8_t stackSize)
+{   
+    int area = 0;
+    int topmostElemIndex = stackSize - 1;
+    for (uint8_t i = 0; i < stackSize; i++)
+    {
+        uint16_t inchTopMostElemX= stack[topmostElemIndex].x * DOT_SPACE_INCHES;
+        uint16_t inchTopMostElemY = stack[topmostElemIndex].y * DOT_SPACE_INCHES;
+
+        uint16_t inchCurrentElemX = stack[i].x * DOT_SPACE_INCHES;
+        uint16_t inchCurrentElemY = stack[i].y * DOT_SPACE_INCHES;
+
+        area += (inchTopMostElemX + inchCurrentElemX) * (inchTopMostElemY - inchCurrentElemY);
+        topmostElemIndex = i;
+    }
+    return (-1)*(area/2);
 }
 
 void SvgPicture::swapPoles(Pole poles[], uint8_t i, uint8_t j)
@@ -232,8 +257,8 @@ void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
 
     drawPolygon(stack, stackSize);
 
-    // uint16_t area = computeArea(stack, stackSize);
-    // drawArea(area);
+    uint16_t area = computeArea(stack, stackSize);
+    writeConvexHullArea(area);
 }
 
 void SvgPicture::startSvgTransmission()
@@ -277,10 +302,10 @@ void SvgPicture::transfer()
     startSvgTransmission();
     header();
     drawTable();
-    drawBlackDots();
-    drawRedDot();
     writeTeamInformation();
     drawConvexHull(poles, nPoles);
+    drawBlackDots();
+    drawRedDot();
     drawGreyDisks(poles, nPoles);
     endSvgTransmission();
     // transmitCrc();

@@ -8,7 +8,7 @@ int main(){
     // Memoire24CXXX memoire;
     // ManagementUSART uart;
     // uart.initialisation();
-    // uint8_t data[] = {1,0, 3,0, 1,1, 2,1, 4,1, 1,2, 6,2, 3,3, 0xff};
+    // uint8_t data[] = {1,0, 3,0, 1,1, 2,1, 4,1, 1,2, 0xff};
     // int size = sizeof(data);
     // uint8_t byte;
 
