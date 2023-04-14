@@ -3,7 +3,6 @@
 #include "Memoire_24.h"
 #include <string.h>
 #include <stdio.h>
-#include <util/crc16.h>
 #include <util/delay.h>
 
 class SvgPicture
@@ -32,9 +31,6 @@ public:
     uint16_t computeArea(Pole stack[], uint8_t stackSize);
     void writeConvexHullArea(uint16_t areaValue);
 
-    // enlever a la fin
-    void printPoles(Pole poles[], uint8_t nPoles);
-
     void swapPoles(Pole poles[], uint8_t i, uint8_t j);
     void keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole);
     int crossProduct(Pole p1, Pole p2, Pole p3);
@@ -52,8 +48,8 @@ public:
     void endTransmission();
 
     // Check CRC
+    void updateCrc(const char* s, size_t n);
     void transmitCrc();
-    void updateCrc();
 
 private:
     ManagementUSART uart_;
@@ -81,4 +77,7 @@ private:
     const int END_TRANSMISSION = 0x04;
 
     uint32_t crc_ = 0xFFFFFFFF;
+    uint32_t reversed_crc_ = 0xEDB88320;
+    const int CRC_ARRAY_SIZE = 9;
+
 };
