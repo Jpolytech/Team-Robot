@@ -30,12 +30,13 @@ public:
 
     uint8_t readPolesFromMemory(Pole poles[8]);
 
-    void swapPoles(Pole poles[], uint8_t &i, uint8_t &j);
+    void printPoles(Pole poles[], uint8_t nPoles);
+    void swapPoles(Pole poles[], uint8_t i, uint8_t j);
     void keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole);
     int crossProduct(Pole p1, Pole p2, Pole p3);
     int dist(Pole p1, Pole p2);
     uint8_t findAnchorPoint(Pole poles[], uint8_t nPoles);
-    void sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint);
+    void sortByPolarAngle(Pole poles[], uint8_t& nPoles, Pole anchorPoint);
     void drawConvexHull(Pole poles[], uint8_t nPoles);
     void drawPolygon(Pole convexHull[], uint8_t nHullPoints);
 
@@ -48,9 +49,14 @@ public:
     void endSvgTransmission();
     void endTransmission();
 
-    // int checkCRC();
+    // Check CRC
+    void transmitCrc();
+    void updateCrc();
 
 private:
+    ManagementUSART uart_;
+    Memoire24CXXX memory_;
+
     const int MATRIX_WIDTH = 8;
     const int MATRIX_HEIGHT = 4;
 
@@ -66,6 +72,9 @@ private:
 
     const uint8_t NO_MORE_POLES = 0xff;
 
-    ManagementUSART uart_;
-    Memoire24CXXX memory_;
+    const int START_TEXT = 0x02;
+    const int END_TEXT = 0x03;
+    const int END_TRANSMISSION = 0x04;
+
+    uint32_t crc_ = 0xFFFFFFFF;
 };

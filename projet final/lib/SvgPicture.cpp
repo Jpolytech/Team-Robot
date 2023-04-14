@@ -100,25 +100,38 @@ uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
     return nPoles;
 }
 
+void SvgPicture::printPoles(Pole poles[], uint8_t nPoles) 
+{
+    for (int i=0; i<nPoles; i++) {
+        char buffer[15];
+        Pole pole = poles[i];
+        int n = sprintf(buffer, "x=%d, y=%d\n", pole.x, pole.y);
+        uart_.transmitString(buffer, n);
+    }
+}
+
 void SvgPicture::drawPolygon(Pole convexHull[], uint8_t nHullPoints)
 {
-    // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon
-    // dessiner une balise "polygone" avec les points de l'enveloppe
     char polygon[POLYGON_ARRAY_SIZE];
-    int n1 = sprintf(polygon, "<polygon points=\" 0,");
+    int n1 = sprintf(polygon, "<polygon points=\"");
     uart_.transmitString(polygon, n1);
+    // updateCrcString(polygon, n1);
 
     for (uint8_t i = 0; i < nHullPoints; i++)
     {
         Pole pole = convexHull[i];
         uint16_t pixelX = FIRST_BLACK_DOT_X_PX + pole.x * DOT_SPACE_PX;
         uint16_t pixelY = FIRST_BLACK_DOT_Y_PX + pole.y * DOT_SPACE_PX;
-        int n2 = sprintf(polygon, "%d %d,", pixelX, pixelY);
+        int n2 = sprintf(polygon, "%d,%d ", pixelX, pixelY);
         uart_.transmitString(polygon, n2);
+        // updateCrcString(polygon, n2);
+
     }
-    int n3 = sprintf(polygon, "0\" style=\"fill: green;\" />");
+    int n3 = sprintf(polygon, "\" style=\"fill: green;stroke:black;stroke_width:5\" />");
     uart_.transmitString(polygon, n3);
+    // updateCrcString(polygon, n3);
 }
+
 
 uint8_t SvgPicture::findAnchorPoint(Pole poles[], uint8_t nPoles)
 {
@@ -147,119 +160,119 @@ int SvgPicture::dist(Pole p1, Pole p2)
     return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
-void SvgPicture::swapPoles(Pole poles[], uint8_t &i, uint8_t &j)
+void SvgPicture::swapPoles(Pole poles[], uint8_t i, uint8_t j)
 {
     Pole temp = poles[i];
     poles[i] = poles[j];
     poles[j] = temp;
 }
 
-void SvgPicture::keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole)
+void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t& nPoles, Pole anchorPoint)
 {
-    // [a, b, c (24), c(15), c(14), d, e] <-- implémenté
-    // result: [a, b, c(24), d, e, vide, vide] nPoles -= 2
-
-    for (uint8_t i = 1; i < nPoles; i++)
+    bool done;
+    do 
     {
-        for (uint8_t j = 1; j < nPoles - 1 - i; j++)
-        {
-            if (poles[i].x == unwantedPole.x && poles[i].y == unwantedPole.y)
-            {
-                poles[i] = poles[j];
-                nPoles--;
-            }
-        }
-    }
-}
+        done = true;
 
-void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint)
-{
-    // sort points by polar angle with P0
-    // [a, b, c (24), c(14), c(15), d, e]
-    // [a, b, c (24), c(15), c(14), d, e] <-- implémenté
-    // [a, b, c (14), c(15), c(24), d, e]
-    for (uint8_t i = 1; i < nPoles; i++)
-    {
-        for (uint8_t j = 1; j < nPoles - 1 - i; j++)
+        for (uint8_t j = 1; j < nPoles - 1; j++)
         {
             int crossProduct = SvgPicture::crossProduct(anchorPoint, poles[j], poles[j + 1]);
 
             if (crossProduct < 0)
             {
-                // if the result is negative, the three points constitute a "right turn" or clockwise orientation
-                swapPoles(poles, j, j+1);
+                swapPoles(poles, j, j + 1);
+                done = false;
             }
-            else if (crossProduct == 0) // colinear
+            else if (crossProduct == 0)
             {
-                // if the result is 0, the points are collinear -> take the farthest one and swap it with the next point in the array
-                // sort dans ce cas par distance, ça va grandement simplifier la
-                // prochaine étape qui consiste à garder les points les plus éloignés
                 if (dist(anchorPoint, poles[j]) < dist(anchorPoint, poles[j + 1]))
                 {
-                    // TODO : garder le point le plus éloigné au début de la suite colinéaire
-                    // et enlever le + proche de la liste
                     swapPoles(poles, j, j + 1);
+                    done = false;
+                    swapPoles(poles, j+1, nPoles - 1);
+                    nPoles--;
+
                 }
             }
         }
     }
+    while(!done); 
+
 }
 
 void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
 {
-    Pole convexHull[8]; // "stack" des points de l'enveloppe (résultat du prochain algorithme)
-    uint8_t nConvexHull = 0;
+    Pole stack[8];
+    uint8_t stackSize = 0;
 
-    // voir pseudo code : https://en.wikipedia.org/wiki/Graham_scan
-    // 1. find the leftmost point p0 and put it in the first position in the output hull
     uint8_t anchorIndex = findAnchorPoint(poles, nPoles);
-    Pole anchorPoint = poles[anchorIndex];
-    // convexHull[nConvexHull++] = anchorPoint;
+    Pole anchorPole = poles[anchorIndex];
+    swapPoles(poles, 0, anchorIndex);
+    
+    // char buffer[30];
+    // int n = sprintf(buffer, "Anchor point: x=%d y=%d", anchorPoint.x, anchorPoint.y);
+    // uart_.transmitString(buffer, n);
 
-    // 2. swap p0 with the first point in the array
-    // cette ligne fait crash
-    //swapPoles(poles, poles[0], anchorPoint);
+    sortByPolarAngle(poles, nPoles, anchorPole);
 
-    // 3. sort the points by polar angle with p0
-    sortByPolarAngle(poles, nPoles, anchorPoint);
-    removeColinear(pole, nPoles, anchorPoint);
+    // printPoles(poles, nPoles);
 
-    // // 4. push p1 and p2 to the stack
-    // convexHull[nConvexHull++] = poles[1];
-    // convexHull[nConvexHull++] = poles[2];
+    stack[stackSize++] = poles[0];
+    stack[stackSize++] = poles[1];
 
-    // 5. Iterate over each point in the sorted array and see if traversing to a point from the previous two points makes a clockwise
-    // or a counter-clockwise direction. If clockwise then reject the point and move on to the next point. Continue this till the end of the sorted array.
-    // propably append the points to the stack
+    for (uint8_t i = 2; i < nPoles; i++)
+    {
+        Pole pole = poles[i];
+        while (stackSize >= 2 && crossProduct(stack[stackSize - 2], stack[stackSize - 1], pole) <= 0)
+        {
+            stackSize--;
+        }
+        stack[stackSize++] = pole;
+    }
 
-    drawPolygon(convexHull, nConvexHull);
+    drawPolygon(stack, stackSize);
+
+    // uint16_t area = computeArea(stack, stackSize);
+    // drawArea(area);
 }
-
-// int SvgPicture::findConvexHullArea(){}
 
 void SvgPicture::startSvgTransmission()
 {
-    uart_.transmitData(0x02);
+    uart_.transmitData(START_TEXT);
+    // updateCrc(START_TEXT);
 }
 
 void SvgPicture::endSvgTransmission()
 {
-    uart_.transmitData(0x03);
+    uart_.transmitData(END_TEXT);
 }
 
 void SvgPicture::endTransmission()
 {
-    uart_.transmitData(0x04);
+    uart_.transmitData(END_TRANSMISSION);
 }
+
+// void SvgPicture::updateCrc(char){
+//     // https://lxp32.github.io/docs/a-simple-example-crc32-calculation/
+// }
+
+// void SvgPicture::updateCrcString(tab, n) {
+//     iterere dans tab:
+//         updateCrc(elem)
+// }
+
+// void SvgPicture::transmitCrc() {
+//     crc = ~crc;
+//     // mettre crc dans un buffer en hexadecimal (prendre en compte que c'est 32 bits et %x s'attend à des 16
+//     // bits, donc split en 2)
+
+//     // transmettre buffer (sans update crc 🥲)
+// }
 
 void SvgPicture::transfer()
 {
     Pole poles[8];
     uint8_t nPoles = readPolesFromMemory(poles);
-    // int SvgPicture::checkCRC(void)
-    // {
-    //     // voir lien documentation sur Notion
-    // }
 
     startSvgTransmission();
     header();
@@ -267,7 +280,9 @@ void SvgPicture::transfer()
     drawBlackDots();
     drawRedDot();
     writeTeamInformation();
-    drawGreyDisks(poles, nPoles);
     drawConvexHull(poles, nPoles);
+    drawGreyDisks(poles, nPoles);
     endSvgTransmission();
+    // transmitCrc();
+    endTransmission();
 }
