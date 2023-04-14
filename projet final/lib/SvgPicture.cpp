@@ -26,7 +26,7 @@ void SvgPicture::drawTable()
 void SvgPicture::drawBlackDot(uint16_t pixelX, uint16_t pixelY)
 {
     char blackDot[BLACK_DOT_ARRAY_SIZE];
-    int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", x, y, DOT_WIDTH, DOT_HEIGHT);
+    int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", pixelX, pixelY, DOT_WIDTH, DOT_HEIGHT);
     uart_.transmitString(blackDot, n);
 }
 
@@ -153,7 +153,7 @@ void SvgPicture::keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedP
     {
         for (uint8_t j = 1; j < nPoles - 1 - i; j++)
         {
-            if (poles[i] == unwantedPole)
+            if (poles[i].x == unwantedPole.x && poles[i].y == unwantedPole.y)
             {
                 poles[i] = poles[j];
                 nPoles--;
@@ -181,7 +181,7 @@ void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint
                 // if the result is 0, the points are collinear -> take the farthest one and swap it with the next point in the array
                 // sort dans ce cas par distance, ça va grandement simplifier la
                 // prochaine étape qui consiste à garder les points les plus éloignés
-                if (dist(anchorPoint, i) > dist(anchorPoint, j))
+                if (dist(anchorPoint, poles[i]) > dist(anchorPoint, poles[j]))
                 {
                     // TODO : garder le point le plus éloigné au début de la suite colinéaire
                     // et enlever le + proche de la liste
@@ -208,11 +208,10 @@ void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
     convexHull[nConvexHull++] = anchorPoint;
 
     // 2. swap p0 with the first point in the array
-    swapPoles(poles[0], anchorPoint);
+    swapPoles(poles, poles[0], anchorPoint);
 
     // 3. sort the points by polar angle with p0
     sortByPolarAngle(poles, nPoles, anchorPoint);
-    keepFarthestPoints(poles, nPoles);
 
     // 4. push p1 to the stack
     convexHull[nConvexHull++] = poles[1];
