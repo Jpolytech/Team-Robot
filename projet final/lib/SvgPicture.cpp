@@ -108,9 +108,12 @@ void SvgPicture::drawPolygon(Pole convexHull[], uint8_t nHullPoints)
     int n1 = sprintf(polygon, "<polygon points=\" 0,");
     uart_.transmitString(polygon, n1);
 
-    for (int i = 0; i < nHullPoints; i++)
+    for (uint8_t i = 0; i < nHullPoints; i++)
     {
-        int n2 = sprintf(polygon, "%d %d,", convexHull[i].x, convexHull[i].y);
+        Pole pole = convexHull[i];
+        uint16_t pixelX = FIRST_BLACK_DOT_X_PX + pole.x * DOT_SPACE_PX;
+        uint16_t pixelY = FIRST_BLACK_DOT_Y_PX + pole.y * DOT_SPACE_PX;
+        int n2 = sprintf(polygon, "%d %d,", pixelX, pixelY);
         uart_.transmitString(polygon, n2);
     }
     int n3 = sprintf(polygon, "0\" style=\"fill: green;\" />");
@@ -122,7 +125,11 @@ uint8_t SvgPicture::findAnchorPoint(Pole poles[], uint8_t nPoles)
     uint8_t anchorPoint = 0;
     for (uint8_t i = 1; i < nPoles; i++)
     {
-        if (poles[i].x < poles[anchorPoint].x && poles[i].y < poles[anchorPoint].y)
+        bool yGreater = poles[i].y > poles[anchorPoint].y;
+        bool yEqual = poles[i].y == poles[anchorPoint].y;
+        bool xLess = poles[i].x < poles[anchorPoint].x;
+
+        if (yGreater || (yEqual && xLess)) 
         {
             anchorPoint = i;
         }
@@ -140,7 +147,7 @@ int SvgPicture::dist(Pole p1, Pole p2)
     return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
-void SvgPicture::swapPoles(Pole poles[], uint8_t i, uint8_t j)
+void SvgPicture::swapPoles(Pole poles[], uint8_t &i, uint8_t &j)
 {
     Pole temp = poles[i];
     poles[i] = poles[j];
@@ -149,6 +156,9 @@ void SvgPicture::swapPoles(Pole poles[], uint8_t i, uint8_t j)
 
 void SvgPicture::keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole)
 {
+    // [a, b, c (24), c(15), c(14), d, e] <-- implémenté
+    // result: [a, b, c(24), d, e, vide, vide] nPoles -= 2
+
     for (uint8_t i = 1; i < nPoles; i++)
     {
         for (uint8_t j = 1; j < nPoles - 1 - i; j++)
@@ -165,32 +175,32 @@ void SvgPicture::keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedP
 void SvgPicture::sortByPolarAngle(Pole poles[], uint8_t nPoles, Pole anchorPoint)
 {
     // sort points by polar angle with P0
+    // [a, b, c (24), c(14), c(15), d, e]
+    // [a, b, c (24), c(15), c(14), d, e] <-- implémenté
+    // [a, b, c (14), c(15), c(24), d, e]
     for (uint8_t i = 1; i < nPoles; i++)
     {
         for (uint8_t j = 1; j < nPoles - 1 - i; j++)
         {
-            int crossProduct = SvgPicture::crossProduct(anchorPoint, poles[i], poles[j]);
+            int crossProduct = SvgPicture::crossProduct(anchorPoint, poles[j], poles[j + 1]);
 
             if (crossProduct < 0)
             {
                 // if the result is negative, the three points constitute a "right turn" or clockwise orientation
-                swapPoles(poles, i, j);
+                swapPoles(poles, j, j+1);
             }
             else if (crossProduct == 0) // colinear
             {
                 // if the result is 0, the points are collinear -> take the farthest one and swap it with the next point in the array
                 // sort dans ce cas par distance, ça va grandement simplifier la
                 // prochaine étape qui consiste à garder les points les plus éloignés
-                if (dist(anchorPoint, poles[i]) > dist(anchorPoint, poles[j]))
+                if (dist(anchorPoint, poles[j]) < dist(anchorPoint, poles[j + 1]))
                 {
                     // TODO : garder le point le plus éloigné au début de la suite colinéaire
                     // et enlever le + proche de la liste
-                    swapPoles(poles, i, j);
-                    keepFarthestPoint(poles, nPoles, i)
+                    swapPoles(poles, j, j + 1);
                 }
             }
-            else
-                continue;
         }
     }
 }
@@ -204,23 +214,25 @@ void SvgPicture::drawConvexHull(Pole poles[], uint8_t nPoles)
     // 1. find the leftmost point p0 and put it in the first position in the output hull
     uint8_t anchorIndex = findAnchorPoint(poles, nPoles);
     Pole anchorPoint = poles[anchorIndex];
-
-    convexHull[nConvexHull++] = anchorPoint;
+    // convexHull[nConvexHull++] = anchorPoint;
 
     // 2. swap p0 with the first point in the array
-    swapPoles(poles, poles[0], anchorPoint);
+    // cette ligne fait crash
+    //swapPoles(poles, poles[0], anchorPoint);
 
     // 3. sort the points by polar angle with p0
     sortByPolarAngle(poles, nPoles, anchorPoint);
+    removeColinear(pole, nPoles, anchorPoint);
 
-    // 4. push p1 to the stack
-    convexHull[nConvexHull++] = poles[1];
+    // // 4. push p1 and p2 to the stack
+    // convexHull[nConvexHull++] = poles[1];
+    // convexHull[nConvexHull++] = poles[2];
 
     // 5. Iterate over each point in the sorted array and see if traversing to a point from the previous two points makes a clockwise
     // or a counter-clockwise direction. If clockwise then reject the point and move on to the next point. Continue this till the end of the sorted array.
     // propably append the points to the stack
 
-    drawPolygon(convexHull[], nConvexHull);
+    drawPolygon(convexHull, nConvexHull);
 }
 
 // int SvgPicture::findConvexHullArea(){}

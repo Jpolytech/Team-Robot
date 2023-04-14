@@ -30,7 +30,7 @@ public:
 
     uint8_t readPolesFromMemory(Pole poles[8]);
 
-    void swapPoles(Pole poles[], uint8_t i, uint8_t j);
+    void swapPoles(Pole poles[], uint8_t &i, uint8_t &j);
     void keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole);
     int crossProduct(Pole p1, Pole p2, Pole p3);
     int dist(Pole p1, Pole p2);
