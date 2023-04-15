@@ -2,24 +2,32 @@
 
 StatesMachine::StatesMachine() : led_(Led(&PORTB, &DDRB, PB0, PB1)) {}
 
-void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isInterruptWhiteButtonPressed)
+void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isWhiteButtonPressed)
 {
     switch (state_) 
     {
+        // while (isInterruptButtonPressed == false || isWhiteButtonPressed == false){};
         case States::INIT:
+            // a enlever
+            led_.switchGreen();
             if (isInterruptButtonPressed == true) 
             {
+                isInterruptButtonPressed = false;
                 state_ = States::DETECTION_ORIENTATION;
             }
-            else if (isInterruptWhiteButtonPressed == true)
+            else if (isWhiteButtonPressed == true)
             {
+                isWhiteButtonPressed = false;
                 state_ = States::TRANSMISSION;
             }
             break;
 
         case States::DETECTION_ORIENTATION: 
             // allumer led en ambre
-            led_.switchAmber();
+            while(isInterruptButtonPressed == false || isWhiteButtonPressed == false)
+            {
+                led_.switchAmber();
+            }
             if (isInterruptButtonPressed == true) 
             {
                 // mettre orientation 90
@@ -28,9 +36,10 @@ void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isInterruptWh
                 led_.switchGreen();
                 // delay 2sec
                 _delay_ms(2000);
+                led_.turnedOff();
                 state_ = States::START_DETECTION;
             }
-            else if (isInterruptWhiteButtonPressed == true)
+            else if (isWhiteButtonPressed == true)
             {
                 // mettre orientation 0
                 robot_.setOrientation(0);
@@ -38,6 +47,7 @@ void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isInterruptWh
                 led_.switchRed();
                 // delay 2sec
                 _delay_ms(2000);
+                led_.turnedOff();
                 state_ = States::START_DETECTION;
             }
             break;
@@ -55,11 +65,13 @@ void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isInterruptWh
             break;
 
         case States::TRANSMISSION: 
-            
-            // call transmission method
-            led_.switchGreen();
-            svgPicture_.transfer();
             // allumer led vert pendant la transmission
+            while (true)
+            {
+                led_.turnedOff();
+            }
+            // call transmission method
+            svgPicture_.transfer();
             if (isInterruptButtonPressed == true) 
             {
                 state_ = States::END;

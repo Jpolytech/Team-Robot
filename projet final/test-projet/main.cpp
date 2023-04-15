@@ -3,28 +3,30 @@
 StatesMachine state;
 ButtonD2 buttonInterrupt = ButtonD2(InterruptMode::RISING_EDGE);
 ButtonD3 buttonWhite = ButtonD3(InterruptMode::RISING_EDGE);
-volatile bool gInterruptButtonPressed = false;
-volatile bool gInterruptWhiteButtonPressed = false;
-// Led ledTest = Led(&PORTB, &DDRB, PB0, PB1);
+volatile bool gInterruptButtonPressed;
+volatile bool gWhiteButtonPressed;
 
 ISR(INT0_vect)
 {
+    _delay_ms(30);
     gInterruptButtonPressed = true;
     buttonInterrupt.clearInterruptFlag();
 }
 
 ISR(INT1_vect)
 {
-    gInterruptWhiteButtonPressed = true;
+    _delay_ms(30);
+    gWhiteButtonPressed = true;
     buttonWhite.clearInterruptFlag();
 }
 
 int main() 
 {
-    while (true){
-        buttonInterrupt.enableInterrupt();
-        buttonWhite.enableInterrupt();
-        state.switchCase(gInterruptButtonPressed, gInterruptWhiteButtonPressed);
+    buttonInterrupt.enableInterrupt();
+    buttonWhite.enableInterrupt();
+    while (true)
+    {
+    state.switchCase(gInterruptButtonPressed, gWhiteButtonPressed);
     }
     return 0;
 }
