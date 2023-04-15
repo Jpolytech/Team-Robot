@@ -17,6 +17,7 @@ Identifications des broches (Broches I/O): Les pins 4, 5, 6 et 7 du Port D sont 
 #pragma once
 #define F_CPU 8000000UL
 #include <avr/io.h>
+#include <util/delay.h>
 
 class Pwm
 {
@@ -28,9 +29,16 @@ public:
     void turnedOff();
     void turnRight(uint8_t percentage);
     void turnLeft(uint8_t percentage);
+    void turnRightPulse();
+    void turnLeftPulse();
 
 private:
     uint8_t convertTicksToPercentage(uint8_t percentage);
     uint8_t NUMBER_OF_TICKS = 254;
     uint8_t PERCENTAGE = 100;
+    const uint8_t offsetRight = 0;
+    const uint8_t offsetLeft = 5;
+    const uint8_t pulseSpeed = 65;
+    const uint8_t pulseDelay = 200;
+    const uint8_t pulseDelayOff = 200;
 };

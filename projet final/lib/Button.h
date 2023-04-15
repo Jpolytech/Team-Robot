@@ -38,6 +38,8 @@ public:
     void enableInterrupt();
     void disableInterrupt();
     void clearInterruptFlag();
+    // bool isButtonActive(uint8_t PDx); 
+    // bool pressedButton(uint8_t PDx);
 
 private:
     void initialisation(InterruptMode mode);

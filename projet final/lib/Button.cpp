@@ -125,3 +125,30 @@ void Button::disableInterrupt()
         break;
     }
 }
+
+// void Button::initialisationButtonScrutation(uint8_t PINDx)
+// {
+//     DDRD &= ~(1 << PINDx);
+//     DDRD &= ~(1 << PINDx);
+// }
+
+// bool Button::isButtonActive(uint8_t PDx) 
+// {
+//     return PIND & (1 << PDx);
+// }
+
+// bool Button::pressedButton(uint8_t PDx) 
+// {
+//     while (!isButtonActive(PDx)) {}
+//     if (isButtonActive(PDx)) 
+//     {
+//         _delay_ms(DEBOUNCE_DELAY_);
+//         if (isButtonActive(PDx)) 
+//         {
+//             while (isButtonActive(PDx)){}
+//             return true;
+//         }
+//     }
+//     return false;
+// }
+
