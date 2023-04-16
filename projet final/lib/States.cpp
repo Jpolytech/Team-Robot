@@ -66,7 +66,7 @@ void StatesMachine::updateState()
             led_.switchGreen();
             _delay_ms(DELAY_2SEC);
             // allumer led vert pendant la transmission avec methode pour lancer une interruption 
-            timer1_.startTimer(391);
+            timer1_.startTimer(DELAY_HALF_SEC_TICKS);
             // call transmission method
             svgPicture_.transfer();
             timer1_.stopTimer();
