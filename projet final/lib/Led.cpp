@@ -36,3 +36,8 @@ void Led::turnedOff()
     *portx_ &= ~(1 << greenPos_);
     *portx_ &= ~(1 << redPos_);
 }
+
+void Led::toggleGreen()
+{
+    *portx_ ^= (1 << greenPos_);
+}

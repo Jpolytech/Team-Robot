@@ -1,6 +1,6 @@
 #include "States.h"
 
-StatesMachine::StatesMachine() : led_(Led(&PORTB, &DDRB, PB0, PB1)) {
+StatesMachine::StatesMachine() : led_(Led(&PORTB, &DDRB, PB0, PB1)), timer1_(Timer1(WaveformMode::CTC, Prescaler::PRESCALE_1024)) {
     robot_.initialisation();
 }
 
@@ -10,7 +10,7 @@ void StatesMachine::updateState()
     {
         case States::INIT:
             // pour verifier quon est dans cet etat initialement -> a enlever
-            led_.switchGreen();
+            // led_.switchGreen();
             if (isInterruptButtonPressed) 
             {
                 isInterruptButtonPressed = false;
@@ -63,9 +63,13 @@ void StatesMachine::updateState()
             break;
 
         case States::TRANSMISSION: 
+            led_.switchGreen();
+            _delay_ms(DELAY_2SEC);
             // allumer led vert pendant la transmission avec methode pour lancer une interruption 
+            timer1_.startTimer(391);
             // call transmission method
             svgPicture_.transfer();
+            timer1_.stopTimer();
             state_ = States::END;
             break;
 

@@ -23,6 +23,9 @@ public:
     void switchGreen();
     void switchRed();
     void switchAmber();
+
+    void toggleGreen();
+
     void turnedOff();
 
 private:

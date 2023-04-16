@@ -3,6 +3,7 @@
 #include "Robot.h"
 #include "SvgPicture.h"
 #include "Button.h"
+#include "Timer1.h"
 #include <util/delay.h>
 #include <avr/io.h>
 
@@ -26,7 +27,8 @@ private:
     Robot robot_;
     States state_;
     Led led_;
-    SvgPicture svgPicture_;
+    SvgPicture svgPicture_; 
+    Timer1 timer1_;
 
     static constexpr uint16_t DELAY_2SEC = 2000;
     const uint8_t ORIENTATION_RIGHT = 0;
