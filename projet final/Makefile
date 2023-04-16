@@ -2,11 +2,11 @@ PHONY: clean make compile install
 
 clean: 
 	cd ./lib && make clean
-	cd ./test-svg-picture && make clean
+	cd ./test-projet && make clean
 
 compile:
 	cd ./lib && make
-	cd ./test-svg-picture && make
+	cd ./test-projet && make
 
 install: clean compile
-	cd ./test-svg-picture && make install
+	cd ./test-projet && make install

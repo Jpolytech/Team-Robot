@@ -99,15 +99,15 @@ uint8_t SvgPicture::readPolesFromMemory(Pole poles[8])
     do
     {
         memory_.lecture(address++, &x);
-        _delay_ms(5);
+        _delay_ms(DELAY_READING_MEMORY);
 
         memory_.lecture(address++, &y);
-        _delay_ms(5);
+        _delay_ms(DELAY_READING_MEMORY);
 
         poles[nPoles++] = {x, y};
 
         memory_.lecture(address, &nextByte);
-        _delay_ms(5);
+        _delay_ms(DELAY_READING_MEMORY);
     } while (nextByte != NO_MORE_POLES);
 
     return nPoles;
