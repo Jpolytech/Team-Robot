@@ -3,7 +3,6 @@
 #include <avr/io.h>
 #include "Sensor.h"
 #include "Pwm.h"
-#include "Uart.h"
 #include "Position.h"
 #include <util/delay.h>
 #include "Memoire_24.h"
@@ -16,7 +15,7 @@ public:
     bool isEmptyTable();
     void setOrientation(uint16_t angle);
 
-private:
+private: // TODO: remettre private
     void moveToPost();
     void replacePost();
     Position position_;

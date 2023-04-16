@@ -17,7 +17,8 @@ bool Robot::isEmptyTable() {
     return isEmptyTable_;
 }
 
-void Robot::searchPost() {
+void Robot::searchPost() 
+{
     nDistancePost_ = sensor_.getSpot();
     while(nDistancePost_ == 0 && rotateTime_ <= 50) {
         motor_.turnLeftPulse();
@@ -29,14 +30,11 @@ void Robot::searchPost() {
     _delay_ms(400);
     uint16_t angle = round(rotateTime_*rotateConst_);
     angle += rotateTime_/2;
-    if(position_.newPosition(nDistancePost_, angle) && nDistancePost_ >= 0) {
+    if(position_.newPosition(nDistancePost_, angle) && nDistancePost_ >= 0) 
+    {
         memory_.ecriture(memoryAdress_++, position_.getCurrentPositionX());
         memory_.ecriture(memoryAdress_++, position_.getCurrentPositionY());
         moveToPost();
-    }
-    else if(nDistancePost_ >= 0){
-        motor_.turnLeftPulse();
-        searchPost();
     }
     else {
         isEmptyTable_ = true;
