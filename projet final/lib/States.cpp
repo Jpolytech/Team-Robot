@@ -58,8 +58,18 @@ void StatesMachine::updateState()
 
         case States::START_DETECTION: 
             robot_.searchPost();
-            while (!isInterruptButtonPressed){};
             led_.turnedOff();
+            state_ = States::WAIT_DETECTION;
+            break;
+
+        case States::WAIT_DETECTION:
+            while (!isInterruptButtonPressed)
+            {
+                led_.toggleAmber(250);
+                _delay_ms(250);
+            };
+            state_ = States::START_DETECTION;
+            isInterruptButtonPressed = false;
             break;
 
         case States::TRANSMISSION: 

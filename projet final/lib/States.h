@@ -11,6 +11,7 @@ enum class States {
     INIT,
     DETECTION_ORIENTATION,
     START_DETECTION,
+    WAIT_DETECTION,
     TRANSMISSION,
     END
 };
