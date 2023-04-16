@@ -1,6 +1,6 @@
 #include "States.h"
 
-const uint8_t DEBOUNCE_DELAY = 30;
+static constexpr uint8_t DEBOUNCE_DELAY = 30;
 
 StatesMachine state;
 
