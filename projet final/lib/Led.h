@@ -25,6 +25,7 @@ public:
     void switchAmber();
 
     void toggleGreen();
+    void toggleAmber(uint8_t time);
 
     void turnedOff();
 

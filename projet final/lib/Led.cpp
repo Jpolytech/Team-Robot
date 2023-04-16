@@ -41,3 +41,13 @@ void Led::toggleGreen()
 {
     *portx_ ^= (1 << greenPos_);
 }
+
+void Led::toggleAmber(uint8_t time)
+{
+    uint8_t frequency = time/(DELAY_AMBER_GREEN_ + DELAY_AMBER_RED_);
+    for(uint8_t i = 0; i < frequency; i++)
+    {
+        switchAmber();
+    }
+    turnedOff();
+}
