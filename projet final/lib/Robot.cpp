@@ -4,7 +4,6 @@ Robot::Robot() : position_(Position(0)), sensor_(Sensor()), motor_(Pwm()), memor
 
 void Robot::initialisation() {
     motor_.initialisation();
-    memory_.init();
     rotateTime_ = 0;
     memoryAdress_ = 0x0000;
 }
@@ -25,6 +24,7 @@ void Robot::searchPost() {
         nDistancePost_ = sensor_.getSpot();
         rotateTime_ += 1; //*0.4 secondes
     }
+
     motor_.turnedOff();
     _delay_ms(400);
     uint16_t angle = round(rotateTime_*rotateConst_);
