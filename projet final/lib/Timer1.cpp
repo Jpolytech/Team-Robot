@@ -25,9 +25,10 @@ void Timer1::startTimer(uint16_t duration)
     sei();
 }
 
+
 void Timer1::clearWaveformMode()
 {
-    TCCR1A &= ~((1 << WGM10) | (1 << WGM11) | (1 << WGM12) | (1 << WGM13));
+    TCCR1B &= ~((1 << WGM10) | (1 << WGM11) | (1 << WGM12) | (1 << WGM13));
 }
 
 void Timer1::setWaveformMode(WaveformMode mode)
@@ -41,7 +42,7 @@ void Timer1::setWaveformMode(WaveformMode mode)
         break;
 
     case WaveformMode::CTC:
-        TCCR1A |= (1 << WGM12);
+        TCCR1B |= (1 << WGM12);
         break;
     }
 }
