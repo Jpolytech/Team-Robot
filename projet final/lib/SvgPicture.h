@@ -15,8 +15,10 @@ public:
         int x, y;
     };
 
-    void header();
-    void footer();
+    void transmitSVGData(char str[], uint8_t size);
+
+    void transmitHeader();
+    void transmitFooter();
 
     void writeTeamInformation();
 

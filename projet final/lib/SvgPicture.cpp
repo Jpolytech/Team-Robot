@@ -5,33 +5,35 @@ SvgPicture::SvgPicture()
     uart_.initialisation();
 }
 
-void SvgPicture::header()
+void SvgPicture::transmitSVGData(char str[], uint8_t size)
 {
-    char header[] = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
-    uart_.transmitString(header, strlen(header));
-    updateCrc(header, strlen(header));
+    uart_.transmitString(str, size);
+    updateCrc(str, size);
 }
 
-void SvgPicture::footer()
+void SvgPicture::transmitHeader()
+{
+    char header[] = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1000\" height=\"600\" viewBox=\"0 0 1700 600\">";
+    transmitSVGData(header, strlen(header));
+}
+
+void SvgPicture::transmitFooter()
 {
     char footer[] = "</svg>";
-    uart_.transmitString(footer, strlen(footer));
-    updateCrc(footer, strlen(footer));
+    transmitSVGData(footer, strlen(footer));
 }
 
 void SvgPicture::drawTable()
 {
     char table[] = "<rect x=\"96\" y=\"48\" width=\"930\" height=\"480\" stroke=\"black\" stroke-width=\"1\" fill=\"white\"/>";
-    uart_.transmitString(table, strlen(table));
-    updateCrc(table, strlen(table));
+    transmitSVGData(table, strlen(table));
 }
 
 void SvgPicture::drawBlackDot(uint16_t pixelX, uint16_t pixelY)
 {
     char blackDot[BLACK_DOT_ARRAY_SIZE];
     int n = sprintf(blackDot, "<rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" stroke=\"black\" stroke-width=\"1\" fill=\"black\"/>", pixelX, pixelY, DOT_WIDTH, DOT_HEIGHT);
-    uart_.transmitString(blackDot, n);
-    updateCrc(blackDot, n);
+    transmitSVGData(blackDot, n);
 }
 
 void SvgPicture::drawBlackDots()
@@ -54,31 +56,27 @@ void SvgPicture::drawBlackDots()
 void SvgPicture::drawRedDot()
 {
     char redDot[] = "<rect x=\"210\" y=\"430\" width=\"10\" height=\"10\" stroke=\"red\" stroke-width=\"1\" fill=\"red\"/>";
-    uart_.transmitString(redDot, strlen(redDot));
-    updateCrc(redDot, strlen(redDot));
+    transmitSVGData(redDot, strlen(redDot));
 }
 
 void SvgPicture::writeTeamInformation()
 {
     char teamInfo[] = "<text x=\"96\" y=\"36\" font-family=\"arial\" font-size=\"20\" fill=\"blue\"> section 01 -- equipe 0108 -- BOB</text>";
-    uart_.transmitString(teamInfo, strlen(teamInfo));
-    updateCrc(teamInfo, strlen(teamInfo));
+    transmitSVGData(teamInfo, strlen(teamInfo));
 }
 
 void SvgPicture::writeConvexHullArea(uint16_t areaValue)
 {
     char area[AREA_ARRAY_SIZE];
     int n = sprintf(area, "<text x=\"96\" y=\"560\" font-family=\"arial\" font-size=\"20\" fill=\"blue\">AIRE: %d pouces carres </text>", areaValue);
-    uart_.transmitString(area, n);
-    updateCrc(area, n);
+    transmitSVGData(area, n);
 }
 
 void SvgPicture::drawGreyDisk(uint16_t pixelX, uint16_t pixelY)
 {
     char greyDisk[GREY_DISK_ARRAY_SIZE];
     int n = sprintf(greyDisk, "<circle cx=\"%d\" cy=\"%d\" r=\"15\" stroke=\"black\" stroke-width=\"4\" fill=\"gray\" />", pixelX, pixelY);
-    uart_.transmitString(greyDisk, n);
-    updateCrc(greyDisk, n);
+    transmitSVGData(greyDisk, n);
 }
 
 void SvgPicture::drawGreyDisks(Pole poles[], uint8_t nPoles)
@@ -119,8 +117,7 @@ void SvgPicture::drawPolygon(Pole convexHull[], uint8_t nHullPoints)
 {
     char polygon[POLYGON_ARRAY_SIZE];
     int n1 = sprintf(polygon, "<polygon points=\"");
-    uart_.transmitString(polygon, n1);
-    updateCrc(polygon, n1);
+    transmitSVGData(polygon, n1);
 
     for (uint8_t i = 0; i < nHullPoints; i++)
     {
@@ -128,12 +125,10 @@ void SvgPicture::drawPolygon(Pole convexHull[], uint8_t nHullPoints)
         uint16_t pixelX = FIRST_BLACK_DOT_X_PX + pole.x * DOT_SPACE_PX;
         uint16_t pixelY = FIRST_BLACK_DOT_Y_PX + pole.y * DOT_SPACE_PX;
         int n2 = sprintf(polygon, "%d,%d ", pixelX, pixelY);
-        uart_.transmitString(polygon, n2);
-        updateCrc(polygon, n2);
+        transmitSVGData(polygon, n2);
     }
     int n3 = sprintf(polygon, "\" style=\"fill: green;stroke:black;stroke_width:5\" />");
-    uart_.transmitString(polygon, n3);
-    updateCrc(polygon, n3);
+    transmitSVGData(polygon, n3);
 }
 
 uint8_t SvgPicture::findAnchorPoint(Pole poles[], uint8_t nPoles)
@@ -166,17 +161,17 @@ int SvgPicture::dist(Pole p1, Pole p2)
 uint16_t SvgPicture::computeArea(Pole stack[], uint8_t stackSize)
 {   
     int area = 0;
-    int topmostElemIndex = stackSize - 1;
+    int topMostElemIndex = stackSize - 1;
     for (uint8_t i = 0; i < stackSize; i++)
     {
-        uint16_t inchTopMostElemX= stack[topmostElemIndex].x * DOT_SPACE_INCHES;
-        uint16_t inchTopMostElemY = stack[topmostElemIndex].y * DOT_SPACE_INCHES;
+        uint16_t inchTopMostElemX= stack[topMostElemIndex].x * DOT_SPACE_INCHES;
+        uint16_t inchTopMostElemY = stack[topMostElemIndex].y * DOT_SPACE_INCHES;
 
         uint16_t inchCurrentElemX = stack[i].x * DOT_SPACE_INCHES;
         uint16_t inchCurrentElemY = stack[i].y * DOT_SPACE_INCHES;
 
         area += (inchTopMostElemX + inchCurrentElemX) * (inchTopMostElemY - inchCurrentElemY);
-        topmostElemIndex = i;
+        topMostElemIndex = i;
     }
     return (-1)*(area/2);
 }
@@ -288,7 +283,6 @@ void SvgPicture::transmitCrc()
     uint16_t msb = crc_>>16;
     uint16_t lsb = (uint16_t)crc_;
     int n = sprintf(crc, "%x%x", msb, lsb);
-
     uart_.transmitString(crc, n);
 }
 
@@ -298,14 +292,14 @@ void SvgPicture::transfer()
     uint8_t nPoles = readPolesFromMemory(poles);
 
     startSvgTransmission();
-    header();
+    transmitHeader();
     drawTable();
     writeTeamInformation();
     drawConvexHull(poles, nPoles);
     drawBlackDots();
     drawRedDot();
     drawGreyDisks(poles, nPoles);
-    footer();
+    transmitFooter();
     endSvgTransmission();
     transmitCrc();
     endTransmission();
