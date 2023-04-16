@@ -1,12 +1,12 @@
 #include "States.h"
 
-static constexpr uint8_t DEBOUNCE_DELAY = 30;
 
 StatesMachine state;
-
 ButtonD2 buttonInterrupt = ButtonD2(InterruptMode::RISING_EDGE);
 ButtonD3 buttonWhite = ButtonD3(InterruptMode::RISING_EDGE);
-// volatile bool gTransmissionStarted = false;
+Led led = Led(&PORTB, &DDRB, PB0, PB1);
+
+static constexpr uint8_t DEBOUNCE_DELAY = 30;
 
 ISR(INT0_vect)
 {
@@ -24,10 +24,11 @@ ISR(INT1_vect)
 
 ISR(TIMER1_COMPA_vect)
 {
-
+    led.toggleGreen();
 }
 
-void initialisation() {
+void initialisation() 
+{
     buttonInterrupt.enableInterrupt();
     buttonWhite.enableInterrupt();
 }
