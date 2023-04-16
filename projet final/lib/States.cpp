@@ -33,11 +33,11 @@ void StatesMachine::updateState()
             if (isInterruptButtonPressed) 
             {
                 // mettre orientation 90
-                robot_.setOrientation(90); // TODO: nb magique
+                robot_.setOrientation(ORIENTATION_UPWARDS);
                 // allumer led_ en vert
                 led_.switchGreen();
                 // delay 2sec
-                _delay_ms(2000); // TODO: nb magique
+                _delay_ms(DELAY_2SEC);
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
                 isInterruptButtonPressed = false;
@@ -45,11 +45,11 @@ void StatesMachine::updateState()
             else if (isWhiteButtonPressed)
             {
                 // mettre orientation 0
-                robot_.setOrientation(0); // TODO: nb magique
+                robot_.setOrientation(ORIENTATION_RIGHT);
                 // allumer led_ en rouge
                 led_.switchRed();
                 // delay 2sec
-                _delay_ms(2000); // TODO: nb magique
+                _delay_ms(DELAY_2SEC);
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
                 isWhiteButtonPressed = false;
