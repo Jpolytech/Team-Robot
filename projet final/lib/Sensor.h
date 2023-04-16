@@ -13,7 +13,7 @@ public:
     bool isSpotFar();
     bool isSpotLost();
 
-//private:
+private:
     can adc_;
     uint8_t lastDistance_;
     uint8_t distance1, distance2, distance3, distance4;
