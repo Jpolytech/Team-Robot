@@ -18,11 +18,13 @@ class StatesMachine {
 
 public:
     StatesMachine();
-    void switchCase(bool isInterruptButtonPressed, bool isInterruptWhiteButtonPressed);
+    void updateState();
+    volatile bool isInterruptButtonPressed = false;
+    volatile bool isWhiteButtonPressed = false;
 
 private:
+    Robot robot_;
     States state_;
     Led led_;
     SvgPicture svgPicture_;
-    Robot robot_;
 };

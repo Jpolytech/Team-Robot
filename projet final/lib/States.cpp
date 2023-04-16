@@ -1,21 +1,22 @@
 #include "States.h"
 
-StatesMachine::StatesMachine() : led_(Led(&PORTB, &DDRB, PB0, PB1)) {}
+StatesMachine::StatesMachine() : led_(Led(&PORTB, &DDRB, PB0, PB1)) {
+    robot_.initialisation();
+}
 
-void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isWhiteButtonPressed)
+void StatesMachine::updateState()
 {
     switch (state_) 
     {
-        // while (isInterruptButtonPressed == false || isWhiteButtonPressed == false){};
         case States::INIT:
-            // a enlever
+            // pour verifier quon est dans cet etat initialement -> a enlever
             led_.switchGreen();
-            if (isInterruptButtonPressed == true) 
+            if (isInterruptButtonPressed) 
             {
                 isInterruptButtonPressed = false;
                 state_ = States::DETECTION_ORIENTATION;
             }
-            else if (isWhiteButtonPressed == true)
+            else if (isWhiteButtonPressed)
             {
                 isWhiteButtonPressed = false;
                 state_ = States::TRANSMISSION;
@@ -23,65 +24,55 @@ void StatesMachine::switchCase(bool isInterruptButtonPressed, bool isWhiteButton
             break;
 
         case States::DETECTION_ORIENTATION: 
-            // allumer led en ambre
-            while(isInterruptButtonPressed == false || isWhiteButtonPressed == false)
+            // allumer led en ambre tant quon choisit pas orientation
+            while(!isInterruptButtonPressed && !isWhiteButtonPressed)
             {
                 led_.switchAmber();
             }
-            if (isInterruptButtonPressed == true) 
+
+            if (isInterruptButtonPressed) 
             {
                 // mettre orientation 90
-                robot_.setOrientation(90);
+                robot_.setOrientation(90); // TODO: nb magique
                 // allumer led_ en vert
                 led_.switchGreen();
                 // delay 2sec
-                _delay_ms(2000);
+                _delay_ms(2000); // TODO: nb magique
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
+                isInterruptButtonPressed = false;
             }
-            else if (isWhiteButtonPressed == true)
+            else if (isWhiteButtonPressed)
             {
                 // mettre orientation 0
-                robot_.setOrientation(0);
+                robot_.setOrientation(0); // TODO: nb magique
                 // allumer led_ en rouge
                 led_.switchRed();
                 // delay 2sec
-                _delay_ms(2000);
+                _delay_ms(2000); // TODO: nb magique
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
+                isWhiteButtonPressed = false;
             }
             break;
 
         case States::START_DETECTION: 
-            // call detection method
             robot_.searchPost();
-            // quand detection fini dun poteau -> allumer led_ en ambre a 2Hz
-            if (isInterruptButtonPressed == true) 
-            {
-                state_ = States::START_DETECTION;
-            }
-            // turned off led_
+            while (!isInterruptButtonPressed){};
             led_.turnedOff();
             break;
 
         case States::TRANSMISSION: 
-            // allumer led vert pendant la transmission
-            while (true)
-            {
-                led_.turnedOff();
-            }
+            // allumer led vert pendant la transmission avec methode pour lancer une interruption 
             // call transmission method
             svgPicture_.transfer();
-            if (isInterruptButtonPressed == true) 
-            {
-                state_ = States::END;
-            }
+            state_ = States::END;
             break;
 
         case States::END:
-        // turned off led
-        led_.turnedOff();
-        while (true);
-        break;
+            // turned off led
+            led_.turnedOff();
+            while (true);
+            break;
         }
 }
