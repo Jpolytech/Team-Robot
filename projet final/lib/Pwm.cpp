@@ -12,7 +12,6 @@ void Pwm::initialisation()
     OCR0B = 0;
     TCCR0A |= (1 << COM0A1) | (1 << COM0B1) | (1 << WGM00);
     TCCR0B |= (1 << CS01);
-    TIMSK0 = (1 << OCIE0A) | (1 << OCIE0B);
 }
 
 uint8_t Pwm::convertTicksToPercentage(uint8_t percentage)
