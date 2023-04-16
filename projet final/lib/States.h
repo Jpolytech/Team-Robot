@@ -28,7 +28,6 @@ private:
     Led led_;
     SvgPicture svgPicture_;
 
-    const int DELAY_2SEC = 2000;
     const int ORIENTATION_RIGHT = 0;
     const int ORIENTATION_UPWARDS = 90;
 };

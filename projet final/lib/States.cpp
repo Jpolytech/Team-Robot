@@ -37,7 +37,7 @@ void StatesMachine::updateState()
                 // allumer led_ en vert
                 led_.switchGreen();
                 // delay 2sec
-                _delay_ms(DELAY_2SEC);
+                _delay_ms(2000); // ask pourquoi ca marche pas avec variable
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
                 isInterruptButtonPressed = false;
@@ -49,7 +49,7 @@ void StatesMachine::updateState()
                 // allumer led_ en rouge
                 led_.switchRed();
                 // delay 2sec
-                _delay_ms(DELAY_2SEC);
+                _delay_ms(2000); // ask pourquoi ca marche pas avec variable
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
                 isWhiteButtonPressed = false;
