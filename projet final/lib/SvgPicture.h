@@ -19,28 +19,25 @@ public:
 
     void transmitHeader();
     void transmitFooter();
-
-    void writeTeamInformation();
-
-    void drawTable();
-    void drawBlackDot(uint16_t pixelX, uint16_t pixelY);
-    void drawBlackDots();
-    void drawRedDot();
-    void drawGreyDisk(uint16_t pixelX, uint16_t pixelY);
-    void drawGreyDisks(Pole poles[], uint8_t nPoles);
+    void transmitTeamInformation();
+    void transmitTable();
+    void transmitBlackDot(uint16_t pixelX, uint16_t pixelY);
+    void transmitBlackDots();
+    void transmitRedDot();
+    void transmitGreyDisk(uint16_t pixelX, uint16_t pixelY);
+    void transmitGreyDisks(Pole poles[], uint8_t nPoles);
 
     uint8_t readPolesFromMemory(Pole poles[8]);
-    uint16_t computeArea(Pole stack[], uint8_t stackSize);
-    void writeConvexHullArea(uint16_t areaValue);
+    uint16_t computeConvexHullArea(Pole stack[], uint8_t stackSize);
+    void transmitConvexHullArea(uint16_t areaValue);
 
     void swapPoles(Pole poles[], uint8_t i, uint8_t j);
-    void keepFarthestPoint(Pole poles[], uint8_t &nPoles, Pole unwantedPole);
     int crossProduct(Pole p1, Pole p2, Pole p3);
     int dist(Pole p1, Pole p2);
     uint8_t findAnchorPoint(Pole poles[], uint8_t nPoles);
     void sortByPolarAngle(Pole poles[], uint8_t& nPoles, Pole anchorPoint);
-    void drawConvexHull(Pole poles[], uint8_t nPoles);
-    void drawPolygon(Pole convexHull[], uint8_t nHullPoints);
+    void transmitConvexHull(Pole poles[], uint8_t nPoles);
+    void transmitPolygon(Pole convexHull[], uint8_t nHullPoints);
 
     void transfer();
 
