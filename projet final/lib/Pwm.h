@@ -36,9 +36,9 @@ private:
     uint8_t convertTicksToPercentage(uint8_t percentage);
     uint8_t NUMBER_OF_TICKS = 254;
     uint8_t PERCENTAGE = 100;
-    const uint8_t offsetRight = 0;
+    const uint8_t offsetRight = 7;
     const uint8_t offsetLeft = 5;
-    const uint8_t pulseSpeed = 65;
-    const uint8_t pulseDelay = 200;
-    const uint8_t pulseDelayOff = 200;
+    const uint8_t pulseSpeed = 80;
+    const uint8_t pulseDelay = 80;
+    const uint8_t pulseDelayOff = 100;
 };
