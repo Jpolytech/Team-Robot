@@ -18,7 +18,7 @@ private:
     uint8_t lastDistance_;
     uint8_t distance1, distance2, distance3, distance4;
     const uint8_t distanceMaxFirstPos = 127;
-    const uint8_t distanceMinSecondPos = 93; //90
+    const uint8_t distanceMinSecondPos = 70; //90
     const uint8_t distanceMaxSecondPos = 57; //verifier cette valeur 55
-    const uint8_t distanceMin_ = 255;
+    const uint8_t distanceMin_ = 250;
 };
