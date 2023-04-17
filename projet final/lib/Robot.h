@@ -12,19 +12,27 @@ public:
     Robot();
     void initialisation();
     void searchPost();
-    bool isEmptyTable();
+    bool getEmptyTable();
     void setOrientation(uint16_t angle);
 
 private: // TODO: remettre private
     void moveToPost();
     void replacePost();
+
     Position position_;
     Sensor sensor_;
     Pwm motor_;
     Memoire24CXXX memory_;
-    const uint8_t rotateConst_ = 7; // Ã  partir de tests (7.5 est la valeur de base)
+
     uint8_t nDistancePost_;
-    uint8_t rotateTime_;
     uint16_t memoryAdress_;
+    uint8_t rotateCount_;
     bool isEmptyTable_ = false;
+
+    const uint8_t ROTATE_CONST = 3;
+    const uint8_t FULL_CIRCLE_COUNT = 100;
+    const uint8_t ROBOT_SPEED = 60;
+    const uint8_t TOP_ORIENTATION_ANGLE = 90;
+    static constexpr uint16_t DELAY_MOTOR = 400;
+
 };
