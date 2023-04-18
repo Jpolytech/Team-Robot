@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include "Sensor.h"
 #include "Pwm.h"
+#include "Led.h"
 #include "Position.h"
 #include <util/delay.h>
 #include "Memoire_24.h"
@@ -24,7 +25,7 @@ private: // TODO: remettre private
     Pwm motor_;
     Memoire24CXXX memory_;
 
-    uint8_t nDistancePost_;
+    Sensor::PolePosition nDistancePost_;
     uint16_t memoryAdress_;
     uint8_t rotateCount_;
     bool isEmptyTable_ = false;
