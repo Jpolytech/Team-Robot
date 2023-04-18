@@ -7,18 +7,37 @@
 class Sensor 
 {
 public:
+    enum class PolePosition {
+        CLOSE = 1,
+        FAR = 2,
+        NONE = 0
+    };
+    
     Sensor();
     uint8_t getDistance();
-    uint8_t getSpot();
-    bool isSpotFar();
+    PolePosition getSpot();
+    bool isSpotEncountered();
     bool isSpotLost();
 
 private:
     can adc_;
     uint8_t lastDistance_;
-    uint8_t distance1, distance2, distance3, distance4;
-    const uint8_t distanceMaxFirstPos = 127;
-    const uint8_t distanceMinSecondPos = 70; //90
-    const uint8_t distanceMaxSecondPos = 57; //verifier cette valeur 55
-    const uint8_t distanceMin_ = 250;
+    const uint8_t finalDistance = 123;
+    const uint8_t distanceMaxFirstPos = 50; // reprendre les valeurs
+    const uint8_t distanceMaxSecondPos = 30;
 };
+
+/*
+    [distanceMaxFirstPos , 255] - poteau 1
+    [distanceMaxSecondPos , distanceMaxFirstPos] - poteau 2
+
+    if(distanceMoy >= distanceMaxFirstPos) {
+        return 1; // le poteau est dans l'entourage du robot
+    }
+    else if(distanceMoy <= distanceMinSecondPos && distanceMoy >= distanceMaxSecondPos) {
+        return 2;
+    }
+    return 0;
+}
+
+*/
