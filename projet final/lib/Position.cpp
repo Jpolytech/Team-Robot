@@ -70,30 +70,30 @@ bool Position::newPosition(uint8_t nPost, uint16_t angle) {
         case Orientation::EAST:
             testCurrentPositionX += nPost;
             break;
-        case Orientation::SOUTHEAST:
+        case Orientation::NORTHEAST:
             testCurrentPositionX += nPost;
-            testCurrentPositionY += nPost;
-            break;
-        case Orientation::SOUTH:
-            testCurrentPositionY += nPost;
-            break;
-        case Orientation::SOUTHWEST:
-            testCurrentPositionX -= nPost;
-            testCurrentPositionY += nPost;
-            break;
-        case Orientation::WEST:
-            testCurrentPositionX -= nPost;
-            break;
-        case Orientation::NORTHWEST:
-            testCurrentPositionX -= nPost;
             testCurrentPositionY -= nPost;
             break;
         case Orientation::NORTH:
             testCurrentPositionY -= nPost;
             break;
-        case Orientation::NORTHEAST:
-            testCurrentPositionX += nPost;
+        case Orientation::NORTHWEST:
+            testCurrentPositionX -= nPost;
             testCurrentPositionY -= nPost;
+            break;
+        case Orientation::WEST:
+            testCurrentPositionX -= nPost;
+            break;
+        case Orientation::SOUTHWEST:
+            testCurrentPositionX -= nPost;
+            testCurrentPositionY += nPost;
+            break;
+        case Orientation::SOUTH:
+            testCurrentPositionY += nPost;
+            break;
+        case Orientation::SOUTHEAST:
+            testCurrentPositionX += nPost;
+            testCurrentPositionY += nPost;
     }
 
 
@@ -102,7 +102,9 @@ bool Position::newPosition(uint8_t nPost, uint16_t angle) {
     currentPositionX_ = testCurrentPositionX;
     currentPositionY_ = testCurrentPositionY;
 
+    uart.transmitData((uint8_t)nPost);
     uart.transmitData((uint8_t)testOrientation);
+    uart.transmitData((uint8_t)angle_);
     uart.transmitData((uint8_t)currentPositionX_);
     uart.transmitData((uint8_t)currentPositionY_);
 
