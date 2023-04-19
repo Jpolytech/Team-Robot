@@ -35,8 +35,7 @@ void Robot::searchPost()
 
     motor_.turnedOff();
     _delay_ms(DELAY_MOTOR);
-    uint16_t angle = round(rotateTime_ * ROTATE_CONST);
-    angle += round(rotateTime_/2);
+    uint16_t angle = round((float)rotateTime_ * ROTATE_CONST);
 
     if(rotateCount_ <= FULL_CIRCLE_COUNT && nDistancePost_ != Sensor::PolePosition::NONE) 
     {
@@ -84,14 +83,15 @@ void Robot::moveToPost()
 void Robot::replacePost() 
 {
     
-    for(int i = 0; i < 7; i++) {
+    for(int i = 0; i < 10; i++) {
         if(!sensor_.isSpotLost()) 
         {
             motor_.turnLeftPulse();
             motor_.turnLeftPulse();
+            motor_.turnLeftPulse();
             break;
         }
-        motor_.turnRightPulse();
+        motor_.turnLeftPulse();
     }
     for(int i = 0; i < 20; i++) 
     {
@@ -100,7 +100,7 @@ void Robot::replacePost()
             motor_.turnRightPulse();
             break;
         }
-        motor_.turnLeftPulse();
+        motor_.turnRightPulse();
     }
     motor_.turnedOff();
     moveToPost();

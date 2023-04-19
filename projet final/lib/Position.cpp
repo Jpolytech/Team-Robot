@@ -4,7 +4,7 @@ Position::Position(uint16_t angle) {
     orientation_ = newOrientation(angle);
 
     currentPositionX_ = 0;
-    currentPositionY_ = 0;
+    currentPositionY_ = 3;
 
     longueur_ = 8;
     largeur_ = 4;
@@ -14,50 +14,35 @@ Position::Position(uint16_t angle) {
             matrice_[i][j] = 0;
         }
     }
+    uart.initialisation();
 }
 
 //methode pour determiner l'orientation du robot à partir de l'angle
 //prend en parametre un angle (en degre)
 Orientation Position::newOrientation(uint16_t angle) {
-    if(angle + angle_ >= 360) { 
-        angle_ += angle - 360;
-    }
-    else { angle_ += angle; }
-    
-    if((angle_ >= 0 && angle_ < 23) || (angle_ <= 360 && angle_ >= 338)) {
-        angle_ = 0;
+
+    uint16_t newAngle = (angle_ + angle)%360;
+    angle_ = newAngle;
+    float jump = 45/2;
+
+    if(newAngle >= 0 - jump && newAngle <= 0 + jump)
         return Orientation::EAST;
-    }
-    else if(angle_ > 23 && angle_ < 68) {
-        angle_ = 45;
+    else if(newAngle > 45 - jump && newAngle <= 45 + jump)
         return Orientation::NORTHEAST;
-    }
-    else if(angle_ > 68 && angle_ < 113) {
-        angle_ = 90;
+    else if(newAngle > 90 - jump && newAngle <= 90 + jump)
         return Orientation::NORTH;
-    }
-    else if(angle_ > 113 && angle_ < 158) {
-        angle_ = 135;
+    else if(newAngle > 135 - jump && newAngle <= 135 + jump)
         return Orientation::NORTHWEST;
-    }
-    else if(angle_ > 158 && angle_ < 203) {
-        angle_ = 180;
+    else if(newAngle > 180 - jump && newAngle <= 180 + jump)
         return Orientation::WEST;
-    }
-    else if(angle_ > 203 && angle_ < 248) {
-        angle_ = 225;
+    else if(newAngle > 225 - jump && newAngle <= 225 + jump)
         return Orientation::SOUTHWEST;
-    }
-    else if(angle_ > 248 && angle_ < 293) {
-        angle_ = 270;
+    else if(newAngle > 270 - jump && newAngle <= 270 + jump)
         return Orientation::SOUTH;
-    }
-    else if(angle_ > 293 && angle_ < 338) {
-        angle_ = 315;
+    else
         return Orientation::SOUTHEAST;
-    }
-    return {};
-};
+}
+
 
 uint8_t Position::getCurrentPositionX() {
     return currentPositionX_;
@@ -87,33 +72,40 @@ bool Position::newPosition(uint8_t nPost, uint16_t angle) {
             break;
         case Orientation::SOUTHEAST:
             testCurrentPositionX += nPost;
-            testCurrentPositionY -= nPost;
+            testCurrentPositionY += nPost;
             break;
         case Orientation::SOUTH:
-            testCurrentPositionY -= nPost;
+            testCurrentPositionY += nPost;
             break;
         case Orientation::SOUTHWEST:
             testCurrentPositionX -= nPost;
-            testCurrentPositionY -= nPost;
+            testCurrentPositionY += nPost;
             break;
         case Orientation::WEST:
             testCurrentPositionX -= nPost;
             break;
         case Orientation::NORTHWEST:
             testCurrentPositionX -= nPost;
-            testCurrentPositionY += nPost;
+            testCurrentPositionY -= nPost;
             break;
         case Orientation::NORTH:
-            testCurrentPositionY += nPost;
+            testCurrentPositionY -= nPost;
             break;
         case Orientation::NORTHEAST:
             testCurrentPositionX += nPost;
-            testCurrentPositionY += nPost;
+            testCurrentPositionY -= nPost;
     }
+
+
 
     orientation_ = testOrientation;
     currentPositionX_ = testCurrentPositionX;
     currentPositionY_ = testCurrentPositionY;
+
+    uart.transmitData((uint8_t)testOrientation);
+    uart.transmitData((uint8_t)currentPositionX_);
+    uart.transmitData((uint8_t)currentPositionY_);
+
     matrice_[currentPositionX_][currentPositionY_] = 1;
     return true;
 };

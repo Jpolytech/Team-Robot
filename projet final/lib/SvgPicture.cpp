@@ -279,10 +279,7 @@ void SvgPicture::transmitCrc()
 {
     crc_ = ~crc_;
     char crc[CRC_ARRAY_SIZE];
-
-    uint16_t msb = crc_>>16;
-    uint16_t lsb = (uint16_t)crc_;
-    int n = sprintf(crc, "%x%x", msb, lsb);
+    int n = sprintf(crc, "%lx", crc);
     uart_.transmitString(crc, n);
 }
 

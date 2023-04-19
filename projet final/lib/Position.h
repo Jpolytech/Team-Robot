@@ -1,16 +1,17 @@
 #pragma once
 #define F_CPU 8000000UL
 #include <avr/io.h>
+#include "Uart.h"
 
 enum class Orientation {
-    NORTH,
-    NORTHEAST,
-    EAST,
-    SOUTHEAST,
-    SOUTH,
-    SOUTHWEST,
-    WEST,
-    NORTHWEST
+    NORTH =0,
+    NORTHEAST =1,
+    EAST =2,
+    SOUTHEAST =3,
+    SOUTH =4,
+    SOUTHWEST =5,
+    WEST =6,
+    NORTHWEST =7
 };
 
 class Position {
@@ -25,6 +26,7 @@ public:
 private:
     Orientation newOrientation(uint16_t angle);
     Orientation orientation_;
+    ManagementUSART uart;
     uint16_t angle_ = 0;
     uint8_t matrice_[4][8];
 	uint8_t longueur_; //nb colonnes
