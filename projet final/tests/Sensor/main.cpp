@@ -5,9 +5,9 @@
 
 // CURRENT AREF: 3.5
 
-const uint8_t distanceMaxFirstPos = 50;
-const uint8_t distanceMaxSecondPos = 30; 
-const uint8_t distanceFinale = 123;
+const uint8_t distanceMaxFirstPos = 65; // 50
+const uint8_t distanceMaxSecondPos = 40;  // 30
+const uint8_t distanceFinale = 165; // 123
 
 const bool SHOW_DISTANCE = true; // commencer par prendre les distances (mettre a true)
 const bool SHOW_SPOT = false; // quand les distances sont obtenues tester (mettre a true)

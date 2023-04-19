@@ -9,8 +9,6 @@ void StatesMachine::updateState()
     switch (state_) 
     {
         case States::INIT:
-            // pour verifier quon est dans cet etat initialement -> a enlever
-            // led_.switchGreen();
             if (isInterruptButtonPressed) 
             {
                 isInterruptButtonPressed = false;

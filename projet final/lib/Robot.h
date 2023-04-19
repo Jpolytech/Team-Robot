@@ -32,7 +32,7 @@ private: // TODO: remettre private
 
     const uint8_t ROTATE_CONST = 3;
     const uint8_t FULL_CIRCLE_COUNT = 100;
-    const uint8_t ROBOT_SPEED = 60;
+    const uint8_t ROBOT_SPEED = 55; // 60 avant 
     const uint8_t TOP_ORIENTATION_ANGLE = 90;
     static constexpr uint16_t DELAY_MOTOR = 400;
 

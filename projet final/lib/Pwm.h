@@ -39,6 +39,6 @@ private:
     const uint8_t offsetRight = 7;
     const uint8_t offsetLeft = 5;
     const uint8_t pulseSpeed = 80;
-    const uint8_t pulseDelay = 80;
+    const uint8_t pulseDelay = 60; // 80 avant
     const uint8_t pulseDelayOff = 100;
 };
