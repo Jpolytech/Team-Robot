@@ -278,9 +278,9 @@ void SvgPicture::updateCrc(const char* s, size_t n)
 void SvgPicture::transmitCrc() 
 {
     crc_ = ~crc_;
-    char crc[CRC_ARRAY_SIZE];
-    int n = sprintf(crc, "%lx", crc);
-    uart_.transmitString(crc, n);
+    char buffer[CRC_ARRAY_SIZE];
+    int n = sprintf(buffer, "%lx", crc_);
+    uart_.transmitString(buffer, n);
 }
 
 void SvgPicture::transfer()
