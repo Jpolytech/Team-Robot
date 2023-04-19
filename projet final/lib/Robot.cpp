@@ -52,7 +52,7 @@ void Robot::searchPost()
         rotateCount_ = 0;
         isEmptyTable_ = true;
         memory_.ecriture(memoryAdress_++, 0xff);
-        // sound_.playNote(...);
+        // sound_.playNote(...); 
     }
 }
 
@@ -100,3 +100,15 @@ void Robot::replacePost()
     motor_.turnedOff();
     moveToPost();
 }
+
+// void Robot::playHighNotes() {
+//     sound_.playNote(HIGH_NOTE1);
+//     _delay_ms(NOTE_DELAY);
+//     sound_.stopNote();
+//     sound_.playNote(HIGH_NOTE2);
+//     _delay_ms(NOTE_DELAY);
+//     sound_.stopNote();
+//     sound_.playNote(HIGH_NOTE3);
+//     _delay_ms(NOTE_DELAY);
+//     sound_.stopNote();
+// }

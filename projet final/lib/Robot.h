@@ -15,6 +15,7 @@ public:
     void searchPost();
     bool getEmptyTable();
     void setOrientation(uint16_t angle);
+    // void playHighNotes();
 
 private: // TODO: remettre private
     void moveToPost();
@@ -24,6 +25,7 @@ private: // TODO: remettre private
     Sensor sensor_;
     Pwm motor_;
     Memoire24CXXX memory_;
+    // Sound sound_;
 
     Sensor::PolePosition nDistancePost_;
     uint16_t memoryAdress_;
