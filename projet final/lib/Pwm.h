@@ -24,8 +24,9 @@ class Pwm
 public:
     Pwm();
     void initialisation();
-    void movingForward(uint8_t percentage);
+    void movingForward(uint8_t percentage, bool withBoost = false);
     void movingBackward(uint8_t percentage);
+    void boost();
     void turnedOff();
     void turnRight(uint8_t percentage);
     void turnLeft(uint8_t percentage);

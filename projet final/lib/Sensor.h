@@ -23,8 +23,8 @@ private:
     can adc_;
     uint8_t lastDistance_;
     const uint8_t distanceMaxFirstPos = 65; // 50
-    const uint8_t distanceMaxSecondPos = 40; // 30
-    const uint8_t finalDistance = 165; // 123
+    const uint8_t distanceMaxSecondPos = 30; // 30
+    const uint8_t finalDistance = 100; // 123
 };
 
 /*

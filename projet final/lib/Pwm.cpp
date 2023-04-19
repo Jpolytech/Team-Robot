@@ -27,8 +27,15 @@ void Pwm::movingBackward(uint8_t percentage)
     PORTB |= (1 << PORTB5);
 }
 
-void Pwm::movingForward(uint8_t percentage)
+void Pwm::boost(){
+    Pwm::movingForward(100, false);
+    _delay_ms(75);
+}
+
+void Pwm::movingForward(uint8_t percentage, bool withBoost)
 {
+    if (withBoost) 
+        boost();
     OCR0A = convertTicksToPercentage(percentage) - offsetRight;
     OCR0B = convertTicksToPercentage(percentage) - offsetLeft;
     PORTB &= ~(1 << PORTB2);

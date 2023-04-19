@@ -59,9 +59,10 @@ void Robot::searchPost()
 //Pour utiliser cette fonction, on suppose que le robot est dejà orienté vers le plot
 void Robot::moveToPost() 
 {
+    motor_.movingForward(ROBOT_SPEED, true);
     while(!sensor_.isSpotEncountered()) 
     {
-        motor_.movingForward(ROBOT_SPEED);
+        
 
         if(sensor_.isSpotEncountered()) 
         {
@@ -72,6 +73,7 @@ void Robot::moveToPost()
         {
             _delay_ms(DELAY_MOTOR);
             replacePost();
+            motor_.movingForward(ROBOT_SPEED, true);
         }
     }
     motor_.turnedOff();
@@ -82,17 +84,20 @@ void Robot::moveToPost()
 void Robot::replacePost() 
 {
     
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < 7; i++) {
         if(!sensor_.isSpotLost()) 
         {
+            motor_.turnLeftPulse();
+            motor_.turnLeftPulse();
             break;
         }
         motor_.turnRightPulse();
     }
-    for(int i = 0; i < 10; i++) 
+    for(int i = 0; i < 20; i++) 
     {
         if(!sensor_.isSpotLost()) 
         {
+            motor_.turnRightPulse();
             break;
         }
         motor_.turnLeftPulse();
