@@ -52,6 +52,7 @@ void Robot::searchPost()
         isEmptyTable_ = true;
         memory_.ecriture(memoryAdress_++, 0xff);
         sound_.playNote(LOW_NOTE1); 
+        _delay_ms(LOW_NOTE_DELAY);
     }
 }
 
@@ -106,15 +107,15 @@ void Robot::replacePost()
 
 void Robot::playHighNotes() {
     sound_.playNote(HIGH_NOTE1);
-    _delay_ms(NOTE_DELAY);
+    _delay_ms(HIGH_NOTE_DELAY);
     sound_.stopNote();
-    _delay_ms(NOTE_DELAY);
+    _delay_ms(HIGH_NOTE_DELAY);
     sound_.playNote(HIGH_NOTE2);
-    _delay_ms(NOTE_DELAY);
+    _delay_ms(HIGH_NOTE_DELAY);
     sound_.stopNote();
-    _delay_ms(NOTE_DELAY);
+    _delay_ms(HIGH_NOTE_DELAY);
     sound_.playNote(HIGH_NOTE3);
-    _delay_ms(NOTE_DELAY);
+    _delay_ms(HIGH_NOTE_DELAY);
     sound_.stopNote();
-    _delay_ms(NOTE_DELAY);
+    _delay_ms(HIGH_NOTE_DELAY);
 }

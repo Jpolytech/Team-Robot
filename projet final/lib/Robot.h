@@ -43,6 +43,7 @@ private:
     const uint8_t HIGH_NOTE2 = 75;
     const uint8_t HIGH_NOTE3 = 80;
     const uint8_t LOW_NOTE1 = 50;
-    static constexpr uint16_t NOTE_DELAY = 300;
+    static constexpr uint16_t HIGH_NOTE_DELAY = 300;
+    static constexpr uint16_t LOW_NOTE_DELAY = 2000;
 
 };
