@@ -29,7 +29,7 @@ void Robot::searchPost()
     {
         motor_.turnLeftPulse();
         nDistancePost_ = sensor_.getSpot();
-        rotateTime_++; //*0.4 secondes
+        rotateTime_++; 
         rotateCount_++;
     }
 
@@ -55,7 +55,6 @@ void Robot::searchPost()
     }
 }
 
-//Pour utiliser cette fonction, on suppose que le robot est dejà orienté vers le plot
 void Robot::moveToPost() 
 {
     motor_.movingForward(ROBOT_SPEED, true);
@@ -76,10 +75,9 @@ void Robot::moveToPost()
         }
     }
     motor_.turnedOff();
-    position_.setOrientation(TOP_ORIENTATION_ANGLE); //le robot est orienté vers le haut apres avoir trouvé un poteau
+    position_.setOrientation(TOP_ORIENTATION_ANGLE);
 }
 
-//en cas de perte du plot(deviation du robot), le robot le recherche
 void Robot::replacePost() 
 {
     

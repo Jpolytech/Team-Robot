@@ -18,7 +18,7 @@ public:
     void setOrientation(uint16_t angle);
     void playHighNotes();
 
-private: // TODO: remettre private
+private: 
     void moveToPost();
     void replacePost();
 
@@ -33,9 +33,9 @@ private: // TODO: remettre private
     uint8_t rotateCount_;
     bool isEmptyTable_ = false;
 
-    const float ROTATE_CONST = 3.05; // 1.75
+    const float ROTATE_CONST = 3.05;
     const uint8_t FULL_CIRCLE_COUNT = 204;
-    const uint8_t ROBOT_SPEED = 40; // 55 avant 
+    const uint8_t ROBOT_SPEED = 40;
     const uint8_t TOP_ORIENTATION_ANGLE = 90;
     static constexpr uint16_t DELAY_MOTOR = 400;
 

@@ -29,8 +29,8 @@ private:
     ManagementUSART uart;
     uint16_t angle_ = 0;
     uint8_t matrice_[4][8];
-	uint8_t longueur_; //nb colonnes
-	uint8_t largeur_; //nb lignes
+	uint8_t longueur_;
+	uint8_t largeur_;
 	uint8_t currentPositionX_;
     uint8_t currentPositionY_;
 };

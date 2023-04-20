@@ -23,7 +23,6 @@ void StatesMachine::updateState()
             break;
 
         case States::DETECTION_ORIENTATION: 
-            // allumer led en ambre tant quon choisit pas orientation
             while(!isInterruptButtonPressed && !isWhiteButtonPressed)
             {
                 led_.switchAmber();
@@ -31,11 +30,8 @@ void StatesMachine::updateState()
 
             if (isInterruptButtonPressed) 
             {
-                // mettre orientation 90
                 robot_.setOrientation(ORIENTATION_UPWARDS);
-                // allumer led_ en vert
                 led_.switchGreen();
-                // delay 2sec
                 _delay_ms(DELAY_2SEC);
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
@@ -43,11 +39,8 @@ void StatesMachine::updateState()
             }
             else if (isWhiteButtonPressed)
             {
-                // mettre orientation 0
                 robot_.setOrientation(ORIENTATION_RIGHT);
-                // allumer led_ en rouge
                 led_.switchRed();
-                // delay 2sec
                 _delay_ms(DELAY_2SEC);
                 led_.turnedOff();
                 state_ = States::START_DETECTION;
@@ -74,16 +67,13 @@ void StatesMachine::updateState()
         case States::TRANSMISSION: 
             led_.switchGreen();
             _delay_ms(DELAY_2SEC);
-            // allumer led vert pendant la transmission avec methode pour lancer une interruption 
             timer1_.startTimer(DELAY_HALF_SEC_TICKS);
-            // call transmission method
             svgPicture_.transfer();
             timer1_.stopTimer();
             state_ = States::END;
             break;
 
         case States::END:
-            // turned off led
             led_.turnedOff();
             while (true);
             break;
