@@ -7,7 +7,7 @@ void Robot::initialisation() {
     memory_.init();
     rotateCount_ = 0;
     memoryAdress_ = 0x0000;
-    // sound_.init();
+    sound_.init();
 }
 
 void Robot::setOrientation(uint16_t angle)
@@ -44,14 +44,14 @@ void Robot::searchPost()
         memory_.ecriture(memoryAdress_++, position_.getCurrentPositionX());
         memory_.ecriture(memoryAdress_++, position_.getCurrentPositionY());
         moveToPost();
-        // playSharpNotes();
+        playHighNotes();
     }
     else 
     {
         rotateCount_ = 0;
         isEmptyTable_ = true;
         memory_.ecriture(memoryAdress_++, 0xff);
-        // sound_.playNote(...); 
+        sound_.playNote(LOW_NOTE1); 
     }
 }
 
@@ -106,14 +106,17 @@ void Robot::replacePost()
     moveToPost();
 }
 
-// void Robot::playHighNotes() {
-//     sound_.playNote(HIGH_NOTE1);
-//     _delay_ms(NOTE_DELAY);
-//     sound_.stopNote();
-//     sound_.playNote(HIGH_NOTE2);
-//     _delay_ms(NOTE_DELAY);
-//     sound_.stopNote();
-//     sound_.playNote(HIGH_NOTE3);
-//     _delay_ms(NOTE_DELAY);
-//     sound_.stopNote();
-// }
+void Robot::playHighNotes() {
+    sound_.playNote(HIGH_NOTE1);
+    _delay_ms(NOTE_DELAY);
+    sound_.stopNote();
+    _delay_ms(NOTE_DELAY);
+    sound_.playNote(HIGH_NOTE2);
+    _delay_ms(NOTE_DELAY);
+    sound_.stopNote();
+    _delay_ms(NOTE_DELAY);
+    sound_.playNote(HIGH_NOTE3);
+    _delay_ms(NOTE_DELAY);
+    sound_.stopNote();
+    _delay_ms(NOTE_DELAY);
+}
