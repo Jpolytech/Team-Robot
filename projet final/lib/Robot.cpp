@@ -53,6 +53,7 @@ void Robot::searchPost()
         memory_.ecriture(memoryAdress_++, 0xff);
         sound_.playNote(LOW_NOTE1); 
         _delay_ms(LOW_NOTE_DELAY);
+        sound_.stopNote();
     }
 }
 
