@@ -1,4 +1,5 @@
 #include "Position.h"
+#include <stdio.h>
 
 Position::Position(uint16_t angle) {
     orientation_ = newOrientation(angle);
@@ -63,8 +64,12 @@ bool Position::newPosition(uint8_t nPost, uint16_t angle) {
     uint8_t  testCurrentPositionX = currentPositionX_;
     uint8_t  testCurrentPositionY = currentPositionY_;
 
-    Orientation testOrientation;
-    testOrientation = newOrientation(angle);
+    char buffer[100];
+    uart.transmitString(buffer, sprintf(buffer, "prevX: %d, prevY: %d\n", currentPositionX_, currentPositionY_));
+    uart.transmitString(buffer, sprintf(buffer, "prevAngle: %d, prevOrientation: %d\n", angle_, (uint8_t) orientation_));
+    uart.transmitString(buffer, sprintf(buffer, "nPost: %d, incrementAngle: %d\n", nPost, angle));
+
+    Orientation testOrientation = newOrientation(angle);
 
     switch(testOrientation) {
         case Orientation::EAST:
@@ -102,11 +107,8 @@ bool Position::newPosition(uint8_t nPost, uint16_t angle) {
     currentPositionX_ = testCurrentPositionX;
     currentPositionY_ = testCurrentPositionY;
 
-    uart.transmitData((uint8_t)nPost);
-    uart.transmitData((uint8_t)testOrientation);
-    uart.transmitData((uint8_t)angle_);
-    uart.transmitData((uint8_t)currentPositionX_);
-    uart.transmitData((uint8_t)currentPositionY_);
+    uart.transmitString(buffer, sprintf(buffer, "newX: %d, newY: %d\n", currentPositionX_, currentPositionY_));
+    uart.transmitString(buffer, sprintf(buffer, "newAngle: %d, newOrientation: %d\n", angle_, (uint8_t) orientation_));
 
     matrice_[currentPositionX_][currentPositionY_] = 1;
     return true;

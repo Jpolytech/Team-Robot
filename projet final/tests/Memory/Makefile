@@ -31,11 +31,13 @@ PROJECTNAME=robot
 # un espace. exemple: 'tp1.c tp2.cpp':
 PRJSRC= main.cpp
 
-# Inclusions additionnels (ex: -I/path/to/mydir)
-INC= -I ../lib
+# Inclusions additionnels (ex: -I/path/to/mydir) path pour makefile de la lib
+INC= -I ../../lib
 
 # Libraires a lier (ex: -lmylib)
-LIBS= -leredelivre -L ../lib
+#dans makefile de la exec
+#pour trouver libRobot.a
+LIBS= -leredelivre -L ../../lib
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
@@ -123,11 +125,12 @@ OBJDEPS=$(CFILES:.c=.o) \
 # En plus de la commande make qui permet de compiler
 # votre projet, vous pouvez utilisez les commandes
 # make all, make install et make clean
-.PHONY: all install clean debug
+.PHONY: all install clean 
 
 # Make all permet simplement de compiler le projet
 #
-all: $(TRG) $(HEXROMTRG)
+all: $(LIBTRG) #dans makefile de la lib
+all: $(TRG) $(HEXROMTRG) #dans makefile de lexec
 
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
@@ -164,9 +167,6 @@ install: $(HEXROMTRG)
 # lors de la compilation
 clean:
 	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
-
-debug: CFLAGS += -DDEBUG
-debug: clean install
 
 # Pour plus d'information sur les phony target, consulter:
 # http://bit.ly/1WBQe61
