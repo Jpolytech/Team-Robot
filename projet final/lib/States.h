@@ -32,6 +32,7 @@ private:
     Timer1 timer1_;
 
     static constexpr uint16_t DELAY_2SEC = 2000;
+    static constexpr uint16_t DELAY_200MS = 200;
     const uint16_t DELAY_HALF_SEC_TICKS = 391;
     const uint8_t ORIENTATION_RIGHT = 0;
     const uint8_t ORIENTATION_UPWARDS = 90;

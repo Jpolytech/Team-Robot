@@ -13,6 +13,7 @@ void StatesMachine::updateState()
             {
                 isInterruptButtonPressed = false;
                 state_ = States::DETECTION_ORIENTATION;
+                _delay_ms(DELAY_200MS);
             }
             else if (isWhiteButtonPressed)
             {
